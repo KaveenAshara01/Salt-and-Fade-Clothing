@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Edit, Trash } from 'lucide-react';
 import axios from 'axios';
+import AdminNav from '../../components/AdminNav';
 
 const CollectionListScreen = () => {
   const [collections, setCollections] = useState([]);
@@ -62,7 +63,8 @@ const CollectionListScreen = () => {
 
   return (
     <div className="container" style={{ padding: '120px 24px 60px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <AdminNav />
+      <div className="admin-header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1 className="title-medium">Collections</h1>
         <button className="btn btn-primary" onClick={createCollectionHandler} style={{ gap: '0.5rem' }}>
           <Plus size={18} /> Create Collection
@@ -78,7 +80,7 @@ const CollectionListScreen = () => {
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--color-white)', boxShadow: 'var(--shadow-sm)' }}>
+          <table className="admin-table-responsive" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--color-white)', boxShadow: 'var(--shadow-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--color-border)', textAlign: 'left' }}>
                 <th style={{ padding: '1rem' }}>ID</th>
@@ -90,9 +92,9 @@ const CollectionListScreen = () => {
             <tbody>
               {collections.map((collection) => (
                 <tr key={collection._id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>{collection._id}</td>
-                  <td style={{ padding: '1rem', fontWeight: 500 }}>{collection.name}</td>
-                  <td style={{ padding: '1rem' }}>
+                  <td data-label="ID" style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>{collection._id}</td>
+                  <td data-label="NAME" style={{ padding: '1rem', fontWeight: 500 }}>{collection.name}</td>
+                  <td data-label="IMAGE" style={{ padding: '1rem' }}>
                     {collection.image && (
                       <img 
                         src={collection.image} 
@@ -101,8 +103,8 @@ const CollectionListScreen = () => {
                       />
                     )}
                   </td>
-                  <td style={{ padding: '1rem' }}>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                  <td data-label="ACTIONS" style={{ padding: '1rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
                       <Link to={`/admin/collection/${collection._id}/edit`} style={{ color: 'var(--color-primary)' }}>
                         <Edit size={18} />
                       </Link>

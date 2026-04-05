@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ShoppingBag, Search, ExternalLink, Edit, CheckCircle, Truck, Package, Clock, X } from 'lucide-react';
+import AdminNav from '../../components/AdminNav';
 
 const AdminOrderListScreen = () => {
   const navigate = useNavigate();
@@ -82,9 +83,10 @@ const AdminOrderListScreen = () => {
 
   return (
     <div className="container" style={{ padding: '120px 24px 60px', minHeight: '80vh' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+      <AdminNav />
+      <div className="admin-header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
         <h1 className="title-medium">Order Management</h1>
-        <div style={{ position: 'relative', width: '300px' }}>
+        <div className="admin-search-container" style={{ position: 'relative', width: '300px' }}>
            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-light)' }} />
            <input 
              type="text" 
@@ -105,7 +107,7 @@ const AdminOrderListScreen = () => {
         <div style={{ padding: '2rem', backgroundColor: '#fff5f5', color: 'var(--color-error)', borderRadius: 'var(--radius-sm)' }}>{error}</div>
       ) : (
         <div style={{ overflowX: 'auto', backgroundColor: '#fff', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table className="admin-table-responsive" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--color-border)', textAlign: 'left', color: 'var(--color-text-light)', fontSize: '0.85rem', textTransform: 'uppercase' }}>
                 <th style={{ padding: '1.5rem' }}>Order ID</th>
@@ -119,27 +121,28 @@ const AdminOrderListScreen = () => {
             <tbody>
               {filteredOrders.map((order) => (
                 <tr key={order._id} style={{ borderBottom: '1px solid #f5f5f5', fontSize: '0.95rem' }}>
-                  <td style={{ padding: '1.5rem', fontWeight: 700, color: 'var(--color-primary)' }}>#{order.orderNumber}</td>
-                  <td style={{ padding: '1.5rem' }}>
+                  <td data-label="Order ID" style={{ padding: '1.5rem', fontWeight: 700, color: 'var(--color-primary)' }}>#{order.orderNumber}</td>
+                  <td data-label="Customer" style={{ padding: '1.5rem' }}>
                     <p style={{ fontWeight: 600 }}>{order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>{order.shippingAddress.email}</p>
                   </td>
-                  <td style={{ padding: '1.5rem' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
-                  <td style={{ padding: '1.5rem', fontWeight: 600 }}>Rs. {order.totalPrice.toLocaleString()}</td>
-                  <td style={{ padding: '1.5rem' }}>
+                  <td data-label="Date" style={{ padding: '1.5rem' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td data-label="Total" style={{ padding: '1.5rem', fontWeight: 600 }}>Rs. {order.totalPrice.toLocaleString()}</td>
+                  <td data-label="Status" style={{ padding: '1.5rem' }}>
                     <span style={{ 
                       padding: '4px 12px', 
                       borderRadius: '20px', 
                       backgroundColor: `${getStatusColor(order.status)}15`, 
                       color: getStatusColor(order.status),
                       fontWeight: 600,
-                      fontSize: '0.8rem'
+                      fontSize: '0.8rem',
+                      display: 'inline-block'
                     }}>
                       {order.status}
                     </span>
                   </td>
-                  <td style={{ padding: '1.5rem' }}>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                  <td data-label="Actions" style={{ padding: '1.5rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
                       <button 
                         onClick={() => {
                           setSelectedOrder(order);

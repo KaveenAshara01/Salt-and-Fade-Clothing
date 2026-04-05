@@ -1039,3 +1039,118 @@ ul {
   transform: scale(1.05);
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
+
+/* Admin Responsive Styles - Mobile Only */
+@media (max-width: 768px) {
+  /* Admin Sub-Navigation */
+  .admin-nav-container {
+    display: flex;
+    overflow-x: auto;
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    margin: -20px -24px 2rem -24px;
+    padding: 0 24px;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+    position: sticky;
+    top: calc(var(--header-height) - 1px);
+    z-index: 90;
+  }
+  
+  .admin-nav-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari */
+  }
+  
+  .admin-nav-item {
+    display: block;
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-light);
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  
+  .admin-nav-item.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+
+  /* Table to Card Transformation */
+  .admin-table-responsive thead {
+    display: none; /* Hide headers on mobile */
+  }
+  
+  .admin-table-responsive, 
+  .admin-table-responsive tbody, 
+  .admin-table-responsive tr, 
+  .admin-table-responsive td {
+    display: block;
+    width: 100%;
+  }
+  
+  .admin-table-responsive tr {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .admin-table-responsive td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0 !important;
+    border-bottom: 1px solid #f9f9f9 !important;
+    text-align: right;
+    font-size: 0.9rem;
+  }
+  
+  .admin-table-responsive td:last-child {
+    border-bottom: none !important;
+    margin-top: 0.5rem;
+    padding-top: 1rem !important;
+  }
+  
+  /* Add label to data on mobile */
+  .admin-table-responsive td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    text-align: left;
+    margin-right: 1rem;
+  }
+
+  /* Specific Adjustments for ID/Hash column */
+  .admin-table-responsive td[data-label="ID"] {
+    font-family: monospace;
+    font-size: 0.8rem;
+  }
+
+  /* Header adjustments for Admin Screens */
+  .admin-header-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1.5rem;
+  }
+  
+  .admin-header-flex h1 {
+    font-size: 1.75rem;
+  }
+  
+  .admin-header-flex .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .admin-search-container {
+    width: 100% !important;
+  }
+}

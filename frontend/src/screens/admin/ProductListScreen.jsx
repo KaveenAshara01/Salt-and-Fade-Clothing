@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Edit, Trash, ExternalLink } from 'lucide-react';
 import axios from 'axios';
+import AdminNav from '../../components/AdminNav';
 
 const ProductListScreen = () => {
   const [products, setProducts] = useState([]);
@@ -62,7 +63,8 @@ const ProductListScreen = () => {
 
   return (
     <div className="container" style={{ padding: '120px 24px 60px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <AdminNav />
+      <div className="admin-header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1 className="title-medium">Products</h1>
         <button className="btn btn-primary" onClick={createProductHandler} style={{ gap: '0.5rem' }}>
           <Plus size={18} /> Create Product
@@ -78,7 +80,7 @@ const ProductListScreen = () => {
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--color-white)', boxShadow: 'var(--shadow-sm)' }}>
+          <table className="admin-table-responsive" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--color-white)', boxShadow: 'var(--shadow-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--color-border)', textAlign: 'left' }}>
                 <th style={{ padding: '1rem' }}>ID</th>
@@ -93,20 +95,20 @@ const ProductListScreen = () => {
             <tbody>
               {products.map((product) => (
                 <tr key={product._id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>{product._id}</td>
-                  <td style={{ padding: '1rem' }}>
+                  <td data-label="ID" style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>{product._id}</td>
+                  <td data-label="PHOTO" style={{ padding: '1rem' }}>
                     <img 
                       src={product.images && product.images.length > 0 ? product.images[0].url : '/images/sample.jpg'} 
                       alt={product.name} 
                       style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} 
                     />
                   </td>
-                  <td style={{ padding: '1rem', fontWeight: 500 }}>{product.name}</td>
-                  <td style={{ padding: '1rem' }}>Rs. {product.price.toLocaleString()}</td>
-                  <td style={{ padding: '1rem' }}>{product.category}</td>
-                  <td style={{ padding: '1rem' }}>{product.collectionRef ? product.collectionRef.name : '-'}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                  <td data-label="NAME" style={{ padding: '1rem', fontWeight: 500 }}>{product.name}</td>
+                  <td data-label="PRICE" style={{ padding: '1rem' }}>Rs. {product.price.toLocaleString()}</td>
+                  <td data-label="CATEGORY" style={{ padding: '1rem' }}>{product.category}</td>
+                  <td data-label="COLLECTION" style={{ padding: '1rem' }}>{product.collectionRef ? product.collectionRef.name : '-'}</td>
+                  <td data-label="ACTIONS" style={{ padding: '1rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
                       <Link to={`/admin/product/${product._id}/edit`} style={{ color: 'var(--color-primary)' }}>
                         <Edit size={18} />
                       </Link>
