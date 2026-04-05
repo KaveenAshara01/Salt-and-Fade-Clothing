@@ -4,12 +4,12 @@ const {
   addOrderItems,
   getMyOrders,
   getOrders,
-  updateOrderTracking,
+  updateOrderStatus,
 } = require('../controllers/orderController.js');
 const { protect, admin } = require('../middleware/authMiddleware.js');
 
-router.route('/').post(protect, addOrderItems).get(protect, admin, getOrders);
+router.route('/').post(addOrderItems).get(protect, admin, getOrders);
 router.route('/myorders').get(protect, getMyOrders);
-router.route('/:id/tracking').put(protect, admin, updateOrderTracking);
+router.route('/:id/status').put(protect, admin, updateOrderStatus);
 
 module.exports = router;

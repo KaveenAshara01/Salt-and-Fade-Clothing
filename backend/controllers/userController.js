@@ -83,8 +83,49 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// @desc    Get user cart
+// @route   GET /api/users/cart
+// @access  Private
+const getUserCart = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      res.json(user.cart);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update user cart
+// @route   PUT /api/users/cart
+// @access  Private
+const updateUserCart = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      // Add debug logs
+      console.log('Updating cart for user:', user._id);
+      user.cart = req.body.cartItems || user.cart;
+
+      const updatedUser = await user.save();
+      res.json(updatedUser.cart);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   authUser,
   registerUser,
   getUserProfile,
+  getUserCart,
+  updateUserCart,
 };

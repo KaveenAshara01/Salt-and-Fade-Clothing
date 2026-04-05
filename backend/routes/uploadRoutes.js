@@ -15,7 +15,10 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'salt-and-fade',
+    folder: async (req, file) => {
+       const folderName = req.query.folder || 'others';
+       return `salt-and-fade/${folderName}`;
+    },
     allowedFormats: ['jpg', 'png', 'jpeg', 'webp'],
   },
 });
@@ -23,7 +26,18 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage });
 
 router.post('/', protect, admin, upload.single('image'), (req, res) => {
-  res.send({ url: req.file.path });
+  console.log('Upload Route Hit');
+  console.log('Request File:', req.file);
+  
+  if (req.file) {
+    res.send({ 
+      url: req.file.path,
+      image: req.file.path,
+      public_id: req.file.filename
+    });
+  } else {
+    res.status(400).send({ message: 'No file uploaded' });
+  }
 });
 
 module.exports = router;

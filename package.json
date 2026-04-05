@@ -5,9 +5,9 @@
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "client": "npm run dev --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm install --prefix backend && nodemon backend/server.js",
+    "client": "npm install --prefix frontend && npm run dev --prefix frontend",
+    "dev": "npm install && concurrently \"npm run server\" \"npm run client\"",
     "build": "npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "",

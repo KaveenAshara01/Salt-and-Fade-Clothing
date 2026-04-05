@@ -11,14 +11,12 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    image: {
-      type: String,
-      required: true,
-    },
-    brand: {
-      type: String,
-      required: true,
-    },
+    images: [
+      {
+        url: { type: String, required: true },
+        public_id: { type: String, required: true },
+      }
+    ],
     category: {
       type: String,
       required: true,
@@ -27,15 +25,20 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    collectionRef: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Collection',
+    },
     price: {
       type: Number,
       required: true,
       default: 0,
     },
     countInStock: {
-      type: Number,
-      required: true,
-      default: 0,
+      S: { type: Number, required: true, default: 0 },
+      M: { type: Number, required: true, default: 0 },
+      L: { type: Number, required: true, default: 0 },
+      XL: { type: Number, required: true, default: 0 },
     },
   },
   {
