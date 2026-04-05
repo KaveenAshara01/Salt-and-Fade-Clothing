@@ -8,6 +8,13 @@ dotenv.config();
 
 const app = express();
 
+console.log('\n=======================================');
+console.log('🚀 Starting Salt & Fade Server...');
+console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+console.log(`📦 DB URI Detected: ${process.env.MONGO_URI ? 'YES' : 'NO (Using Local Default)'}`);
+console.log(`🔐 JWT Secret Detected: ${process.env.JWT_SECRET ? 'YES' : 'NO (Check ENV)'}`);
+console.log('=======================================\n');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -64,6 +71,14 @@ mongoose
     });
   })
   .catch((err) => {
-    console.error('\n❌ Error connecting to MongoDB:', err.message);
-    process.exit(1);
+    console.log('---------------------------------------');
+    console.log('CRITICAL: Error connecting to MongoDB');
+    console.log('Error Message:', err.message);
+    console.log('Check your MONGO_URI in Render dashboard.');
+    console.log('---------------------------------------');
+    
+    // Slight delay to allow logs to flush to Render
+    setTimeout(() => {
+      process.exit(1);
+    }, 1000);
   });
