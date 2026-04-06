@@ -596,6 +596,10 @@ ul {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
+
+  .product-detail-title-mobile-only {
+    font-size: 1.75rem !important;
+  }
   
   .product-gallery-container {
     flex-direction: column-reverse !important;
@@ -606,12 +610,31 @@ ul {
     flex-direction: row !important;
     overflow-x: auto;
     padding-bottom: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0.75rem !important;
+  }
+  
+  .product-thumbnails::-webkit-scrollbar {
+    display: none;
   }
   
   .product-thumbnail-item {
-    width: 60px !important;
-    height: 80px !important;
+    width: 65px !important;
+    height: 85px !important;
     flex-shrink: 0;
+  }
+
+  .trust-badge-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .whatsapp-btn-mobile {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-sm);
   }
 }
 

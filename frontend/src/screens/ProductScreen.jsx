@@ -90,6 +90,7 @@ const ProductScreen = () => {
               <div 
                 key={idx}
                 onMouseEnter={() => setMainImage(img.url)}
+                onClick={() => setMainImage(img.url)}
                 className="product-thumbnail-item"
                 style={{ 
                   width: '70px',
@@ -136,7 +137,7 @@ const ProductScreen = () => {
                 }} 
               />
 
-              {/* Popped Zoom Window - Hidden on Mobile */}
+              {/* Popped Zoom Window - Only shown on Desktop viewports */}
               {zoomPos.show && window.innerWidth > 850 && (
                 <div style={{
                   position: 'absolute',
@@ -175,7 +176,7 @@ const ProductScreen = () => {
             }}>
               {product.collectionRef?.name || product.category}
             </span>
-            <h1 className="title-medium" style={{ fontSize: '2.5rem', marginTop: '1rem', marginBottom: '0.5rem' }}>{product.name}</h1>
+            <h1 className="title-medium product-detail-title-mobile-only" style={{ fontSize: '2.5rem', marginTop: '1rem', marginBottom: '0.5rem' }}>{product.name}</h1>
             <p style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--color-primary)' }}>
               Rs. {product.price.toLocaleString()}
             </p>
@@ -266,6 +267,7 @@ const ProductScreen = () => {
             href={`https://wa.me/94762707848?text=Hello Salt %26 Fade, I'm interested in the ${product.name}.`}
             target="_blank"
             rel="noreferrer"
+            className="whatsapp-btn-mobile-only"
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -287,7 +289,7 @@ const ProductScreen = () => {
             Inquire on WhatsApp
           </a>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', borderTop: '1px solid var(--color-border)', paddingTop: '2rem' }}>
+          <div className="trust-badge-grid-mobile-only" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', borderTop: '1px solid var(--color-border)', paddingTop: '2rem' }}>
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                 <div style={{ backgroundColor: 'var(--color-bg)', padding: '10px', borderRadius: '50%', color: 'var(--color-primary)' }}>
                   <Truck size={20} />
