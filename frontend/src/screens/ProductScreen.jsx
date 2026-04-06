@@ -185,7 +185,7 @@ const ProductScreen = () => {
           <div 
             className="product-description-rich"
             style={{ fontSize: '1.05rem', lineHeight: 1.8, color: 'var(--color-text-light)' }}
-            dangerouslySetInnerHTML={{ __html: product.description }}
+            dangerouslySetInnerHTML={{ __html: product.description.replace(/&nbsp;/g, ' ') }}
           ></div>
 
           <div>

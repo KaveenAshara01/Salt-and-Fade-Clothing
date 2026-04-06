@@ -409,6 +409,12 @@ ul {
 }
 
 /* Rich Text Content Styling */
+.product-description-rich {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 .product-description-rich p {
   margin-bottom: 1.25rem;
 }
@@ -598,7 +604,9 @@ ul {
   }
 
   .product-detail-title-mobile-only {
-    font-size: 1.75rem !important;
+    font-size: clamp(1.4rem, 8vw, 1.75rem) !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .product-gallery-container {
