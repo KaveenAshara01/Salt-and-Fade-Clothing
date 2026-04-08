@@ -3,24 +3,24 @@ import { Instagram, Facebook, Mail } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer style={{ 
-      marginTop: 'auto', 
-      padding: '5rem 0 3rem', 
-      backgroundColor: '#111', 
+    <footer style={{
+      marginTop: 'auto',
+      padding: '5rem 0 3rem',
+      backgroundColor: '#111',
       color: '#fff',
       borderTop: '1px solid #222'
     }}>
       <div className="container">
-        
+
         {/* Desktop Footer (Restoring Original Layout) */}
         <div className="footer-grid hide-mobile">
           {/* Column 1: Brand */}
           <div className="footer-section footer-brand">
             <Link to="/">
-              <img 
-                src="/images/logo-transparent.png" 
-                alt="Salt & Fade" 
-                style={{ height: '90px', width: 'auto', marginBottom: '1.5rem', filter: 'brightness(0) invert(1)' }} 
+              <img
+                src="/images/logo-transparent.png"
+                alt="Salt & Fade"
+                style={{ height: '90px', width: 'auto', marginBottom: '1.5rem', filter: 'brightness(0) invert(1)' }}
               />
             </Link>
             <p style={{ color: '#888', lineHeight: 1.8, fontSize: '0.9rem', maxWidth: '300px' }}>
@@ -33,13 +33,13 @@ const Footer = () => {
             <h3 style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1.5rem', letterSpacing: '1px', color: '#555' }}>Shop</h3>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
               <li>
-                <button 
+                <button
                   onClick={() => {
-                      const el = document.getElementById('new-arrivals');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      else window.location.href = '/#new-arrivals';
-                  }} 
-                  className="footer-link" 
+                    const el = document.getElementById('new-arrivals');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    else window.location.href = '/#new-arrivals';
+                  }}
+                  className="footer-link"
                   style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'center', font: 'inherit' }}
                 >
                   New Arrivals
@@ -69,7 +69,7 @@ const Footer = () => {
               </a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'flex-end' }}>
-              <a href="mailto:info@saltandfadeclothing.com" className="footer-link" style={{ fontSize: '0.85rem' }}>info@saltandfadeclothing.com</a>
+              <a href="mailto:hello@saltandfadeclothing.com" className="footer-link" style={{ fontSize: '0.85rem' }}>hello@saltandfadeclothing.com</a>
               <a href="tel:+94762707848" className="footer-link" style={{ fontSize: '0.85rem' }}>+94 76 270 7848</a>
             </div>
           </div>
@@ -79,10 +79,10 @@ const Footer = () => {
         <div className="mobile-only" style={{ flexDirection: 'column' }}>
           <div className="footer-section footer-brand" style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <Link to="/">
-              <img 
-                src="/images/logo-transparent.png" 
-                alt="Salt & Fade" 
-                style={{ height: '80px', width: 'auto', marginBottom: '1.5rem', filter: 'brightness(0) invert(1)' }} 
+              <img
+                src="/images/logo-transparent.png"
+                alt="Salt & Fade"
+                style={{ height: '80px', width: 'auto', marginBottom: '1.5rem', filter: 'brightness(0) invert(1)' }}
               />
             </Link>
             <p style={{ color: '#888', lineHeight: 1.8, fontSize: '0.85rem', maxWidth: '280px', margin: '0 auto' }}>
@@ -117,7 +117,7 @@ const Footer = () => {
                   </a>
                 </div>
                 <div className="footer-contact-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <a href="mailto:info@saltandfadeclothing.com" className="footer-link" style={{ fontSize: '0.8rem' }}>info@saltandfadeclothing.com</a>
+                  <a href="mailto:hello@saltandfadeclothing.com" className="footer-link" style={{ fontSize: '0.8rem' }}>hello@saltandfadeclothing.com</a>
                 </div>
               </div>
             </div>
