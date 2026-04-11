@@ -82,7 +82,7 @@ const HomeScreen = () => {
         <div className="container">
           <div className="section-header-shaggy">
             <h2>{collectionId ? collectionName : 'New Arrivals'}</h2>
-            <p>{collectionId ? `Exploring the ${collectionName} Collection` : 'Score a Free Lid on us when you spend RS. 10,000'}</p>
+            <p>{collectionId ? `Exploring the ${collectionName} Collection` : 'Freshly dropped essentials for the island lifestyle.'}</p>
           </div>
 
           {loading ? (

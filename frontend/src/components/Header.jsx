@@ -61,12 +61,12 @@ const Header = () => {
     <>
       <div className="marquee-container" id="top-bar">
         <div className="marquee-content">
-          <span style={{ paddingRight: '80px' }}>★ FREE SECURE SHIPPING ON ORDERS OVER RS. 15,000</span>
-          <span style={{ paddingRight: '80px' }}>★ HASSLE FREE EXCHANGES WITHIN 15 DAYS</span>
-          <span style={{ paddingRight: '80px' }}>★ FRESH ARRIVALS JUST DROPPED</span>
-          <span style={{ paddingRight: '80px' }}>★ FREE SECURE SHIPPING ON ORDERS OVER RS. 15,000</span>
-          <span style={{ paddingRight: '80px' }}>★ HASSLE FREE EXCHANGES WITHIN 15 DAYS</span>
-          <span style={{ paddingRight: '80px' }}>★ FRESH ARRIVALS JUST DROPPED</span>
+          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 6,000</span>
+          <span style={{ paddingRight: '120px' }}>★ CREATE AN ACCOUNT AND UNLOCK LOYALTY BENEFITS</span>
+          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 6,000</span>
+          <span style={{ paddingRight: '120px' }}>★ CREATE AN ACCOUNT AND UNLOCK LOYALTY BENEFITS</span>
+          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 6,000</span>
+          <span style={{ paddingRight: '120px' }}>★ CREATE AN ACCOUNT AND UNLOCK LOYALTY BENEFITS</span>
         </div>
       </div>
 
@@ -97,8 +97,8 @@ const Header = () => {
               src="/images/logo-transparent.png" 
               alt="Salt & Fade Logo" 
               style={{ 
-                height: isScrolled ? '60px' : '90px', 
-                transition: 'all-duration-slow',
+                height: isScrolled ? '75px' : '130px', 
+                transition: 'all 0.4s ease',
                 objectFit: 'contain'
               }} 
             />
@@ -168,7 +168,7 @@ const Header = () => {
       {/* Mobile Drawer Content */}
       <div className={`mobile-drawer ${isMenuOpen ? 'active' : ''}`}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-          <img src="/images/logo-transparent.png" alt="Logo" style={{ height: '40px' }} />
+          <img src="/images/logo-transparent.png" alt="Logo" style={{ height: '50px' }} />
           <button onClick={closeMenu} style={{ color: 'var(--color-primary)' }}><X size={24} /></button>
         </div>
 

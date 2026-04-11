@@ -14,7 +14,7 @@ const ProductScreen = () => {
   const [error, setError] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [mainImage, setMainImage] = useState('');
-  
+
   // Zoom state
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0, show: false });
   const containerRef = useRef(null);
@@ -79,20 +79,20 @@ const ProductScreen = () => {
       <Link to="/" className="flex-center" style={{ gap: '0.5rem', width: 'fit-content', marginBottom: '3rem', color: 'var(--color-text)', opacity: 0.7 }}>
         <ArrowLeft size={18} /> Back to Shop
       </Link>
-      
+
       <div className="product-detail-grid">
-        
+
         {/* Left: Image Section */}
         <div className="product-gallery-container" style={{ display: 'flex', gap: '1.5rem' }}>
           {/* Thumbnails */}
           <div className="product-thumbnails" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {product.images.map((img, idx) => (
-              <div 
+              <div
                 key={idx}
                 onMouseEnter={() => setMainImage(img.url)}
                 onClick={() => setMainImage(img.url)}
                 className="product-thumbnail-item"
-                style={{ 
+                style={{
                   width: '70px',
                   height: '90px',
                   borderRadius: 'var(--radius-sm)',
@@ -110,31 +110,31 @@ const ProductScreen = () => {
 
           {/* Main Image Container (Smaller & Popped Zoom) */}
           <div style={{ position: 'relative', flex: 1, maxWidth: '100%' }}>
-             <div 
+            <div
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              style={{ 
-                position: 'relative', 
-                backgroundColor: '#f9f9f9', 
-                borderRadius: 'var(--radius-md)', 
+              style={{
+                position: 'relative',
+                backgroundColor: '#f9f9f9',
+                borderRadius: 'var(--radius-md)',
                 overflow: 'visible',
                 cursor: 'crosshair',
                 border: '1px solid var(--color-border)',
                 lineHeight: 0,
                 width: 'fit-content',
-                margin: '0 auto' 
+                margin: '0 auto'
               }}
             >
-              <img 
-                src={mainImage} 
-                alt={product.name} 
-                style={{ 
-                  maxWidth: '100%', 
+              <img
+                src={mainImage}
+                alt={product.name}
+                style={{
+                  maxWidth: '100%',
                   height: 'auto',
                   display: 'block',
                   borderRadius: 'var(--radius-md)'
-                }} 
+                }}
               />
 
               {/* Popped Zoom Window - Only shown on Desktop viewports */}
@@ -152,7 +152,7 @@ const ProductScreen = () => {
                   zIndex: 2000,
                   backgroundImage: `url(${mainImage})`,
                   backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
-                  backgroundSize: '250%', 
+                  backgroundSize: '250%',
                   backgroundRepeat: 'no-repeat',
                   pointerEvents: 'none',
                   display: 'block'
@@ -165,12 +165,12 @@ const ProductScreen = () => {
         {/* Right: Info Section */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <div>
-            <span style={{ 
-              backgroundColor: 'var(--color-bg)', 
-              padding: '4px 12px', 
-              borderRadius: '20px', 
-              fontSize: '0.8rem', 
-              fontWeight: 600, 
+            <span style={{
+              backgroundColor: 'var(--color-bg)',
+              padding: '4px 12px',
+              borderRadius: '20px',
+              fontSize: '0.8rem',
+              fontWeight: 600,
               color: 'var(--color-accent)',
               textTransform: 'uppercase'
             }}>
@@ -182,7 +182,7 @@ const ProductScreen = () => {
             </p>
           </div>
 
-          <div 
+          <div
             className="product-description-rich"
             style={{ fontSize: '1.05rem', lineHeight: 1.8, color: 'var(--color-text-light)' }}
             dangerouslySetInnerHTML={{ __html: product.description.replace(/&nbsp;/g, ' ') }}
@@ -194,7 +194,7 @@ const ProductScreen = () => {
               {['S', 'M', 'L', 'XL'].map((size) => {
                 const count = product.countInStock[size] || 0;
                 const isOutOfStock = count === 0;
-                
+
                 return (
                   <button
                     key={size}
@@ -219,13 +219,13 @@ const ProductScreen = () => {
                   >
                     {size}
                     {isOutOfStock && (
-                      <div style={{ 
-                        position: 'absolute', 
-                        top: '50%', 
-                        left: '-20%', 
-                        width: '140%', 
-                        height: '1px', 
-                        backgroundColor: '#bbb', 
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '-20%',
+                        width: '140%',
+                        height: '1px',
+                        backgroundColor: '#bbb',
                         transform: 'rotate(-45deg)',
                         opacity: 0.6
                       }}></div>
@@ -236,13 +236,13 @@ const ProductScreen = () => {
             </div>
             {/* Low Stock Message */}
             {selectedSize && product.countInStock[selectedSize] < 5 && product.countInStock[selectedSize] > 0 && (
-              <div style={{ 
-                marginTop: '1.5rem', 
-                backgroundColor: '#fff5f5', 
-                borderLeft: '4px solid var(--color-error)', 
-                padding: '0.75rem 1rem', 
-                display: 'flex', 
-                alignItems: 'center', 
+              <div style={{
+                marginTop: '1.5rem',
+                backgroundColor: '#fff5f5',
+                borderLeft: '4px solid var(--color-error)',
+                padding: '0.75rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
                 gap: '0.75rem',
                 color: 'var(--color-error)',
                 fontWeight: 600,
@@ -254,8 +254,8 @@ const ProductScreen = () => {
             )}
           </div>
 
-          <button 
-            className="btn btn-primary" 
+          <button
+            className="btn btn-primary"
             onClick={addToCartHandler}
             disabled={!selectedSize}
             style={{ width: '100%', padding: '20px', fontSize: '1.1rem', gap: '1rem', marginBottom: '1rem' }}
@@ -263,16 +263,16 @@ const ProductScreen = () => {
             <ShoppingCart size={20} /> Add To Cart
           </button>
 
-          <a 
+          <a
             href={`https://wa.me/94762707848?text=Hello Salt %26 Fade, I'm interested in the ${product.name}.`}
             target="_blank"
             rel="noreferrer"
             className="whatsapp-btn-mobile-only"
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.75rem', 
+              gap: '0.75rem',
               marginTop: '0.75rem',
               color: '#444',
               textDecoration: 'none',
@@ -290,24 +290,24 @@ const ProductScreen = () => {
           </a>
 
           <div className="trust-badge-grid-mobile-only" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', borderTop: '1px solid var(--color-border)', paddingTop: '2rem' }}>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <div style={{ backgroundColor: 'var(--color-bg)', padding: '10px', borderRadius: '50%', color: 'var(--color-primary)' }}>
-                  <Truck size={20} />
-                </div>
-                <div>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600 }}>Standard Delivery</h4>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Free over Rs. 10,000</p>
-                </div>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+              <div style={{ backgroundColor: 'var(--color-bg)', padding: '10px', borderRadius: '50%', color: 'var(--color-primary)' }}>
+                <Truck size={20} />
               </div>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <div style={{ backgroundColor: 'var(--color-bg)', padding: '10px', borderRadius: '50%', color: 'var(--color-primary)' }}>
-                  <ShieldCheck size={20} />
-                </div>
-                <div>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600 }}>Secure Payment</h4>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>100% Secure Checkout</p>
-                </div>
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 600 }}>Standard Delivery</h4>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Free over Rs. 6,000</p>
               </div>
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+              <div style={{ backgroundColor: 'var(--color-bg)', padding: '10px', borderRadius: '50%', color: 'var(--color-primary)' }}>
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 600 }}>Secure Payment</h4>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>100% Secure Checkout</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
