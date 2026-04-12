@@ -128,7 +128,8 @@ const HomeScreen = () => {
                     className="btn btn-primary"
                     style={{ 
                       padding: '14px 40px', 
-                      backgroundColor: '#1a1a1a', 
+                      backgroundColor: 'var(--color-primary)', 
+                      color: 'var(--color-footer)',
                       borderRadius: '2px', 
                       fontSize: '0.85rem',
                       letterSpacing: '1.5px',
@@ -175,7 +176,8 @@ const HomeScreen = () => {
                 style={{ 
                   width: 'fit-content', 
                   padding: '14px 28px', 
-                  backgroundColor: '#1a1a1a', 
+                  backgroundColor: 'var(--color-primary)', 
+                  color: 'var(--color-footer)',
                   borderRadius: '2px', 
                   fontSize: '0.8rem',
                   letterSpacing: '1.5px'

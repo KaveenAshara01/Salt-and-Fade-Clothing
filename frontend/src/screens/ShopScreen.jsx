@@ -160,7 +160,7 @@ const ShopScreen = () => {
                 transform: 'translateX(-50%)',
                 width: '220px',
                 backgroundColor: '#fff', 
-                border: '1px solid #1a1a1a', 
+                border: '1px solid var(--color-primary)', 
                 borderRadius: '4px',
                 boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
                 zIndex: 100,
@@ -178,7 +178,7 @@ const ShopScreen = () => {
                       fontWeight: currentSort === opt.value ? 700 : 400,
                       fontSize: '0.85rem'
                     }}
-                    onMouseOver={(e) => { e.target.style.backgroundColor = '#1a1a1a'; e.target.style.color = '#fff'; }}
+                    onMouseOver={(e) => { e.target.style.backgroundColor = 'var(--color-primary)'; e.target.style.color = 'var(--color-footer)'; }}
                     onMouseOut={(e) => { 
                       e.target.style.backgroundColor = currentSort === opt.value ? '#f5f5f5' : '#fff'; 
                       e.target.style.color = currentSort === opt.value ? '#000' : '#444'; 
@@ -234,7 +234,7 @@ const ShopScreen = () => {
           <main>
             {loading ? (
               <div className="flex-center" style={{ minHeight: '400px' }}>
-                <div className="spin" style={{ width: '40px', height: '40px', border: '4px solid #eee', borderTopColor: '#000', borderRadius: '50%' }}></div>
+                <div className="spin" style={{ width: '40px', height: '40px', border: '4px solid var(--color-border)', borderTopColor: 'var(--color-primary)', borderRadius: '50%' }}></div>
               </div>
             ) : error ? (
               <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-error)' }}>Error fetching products: {error}</div>

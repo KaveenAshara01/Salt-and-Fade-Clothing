@@ -50,8 +50,8 @@ const AboutScreen = () => {
             style={{ 
               width: 'fit-content', 
               padding: '16px 32px', 
-              backgroundColor: '#212121', 
-              color: '#fff', 
+              backgroundColor: 'var(--color-primary)', 
+              color: 'var(--color-footer)', 
               borderRadius: '3px',
               fontSize: '0.9rem',
               fontWeight: 600,

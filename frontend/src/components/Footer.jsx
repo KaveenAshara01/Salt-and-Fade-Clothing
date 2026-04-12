@@ -6,9 +6,9 @@ const Footer = () => {
     <footer style={{
       marginTop: 'auto',
       padding: '5rem 0 3rem',
-      backgroundColor: '#111',
+      backgroundColor: 'var(--color-footer)',
       color: '#fff',
-      borderTop: '1px solid #222'
+      borderTop: '1px solid rgba(255,255,255,0.1)'
     }}>
       <div className="container">
 

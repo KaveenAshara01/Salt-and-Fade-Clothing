@@ -2,12 +2,13 @@
 
 :root {
   /* Salt and Fade Palette */
-  --color-bg: #FAF9F6; /* Warm sand */
+  --color-bg: #FDF8F4; /* Light Cream from Logo */
   --color-text: #222222; /* Charcoal */
   --color-text-light: #666666;
-  --color-primary: #222222; 
-  --color-primary-light: #444444;
-  --color-accent: #E07A5F; /* Sunbaked clay */
+  --color-primary: #D5B28C; /* Cream from Logo */
+  --color-primary-light: #C4A17B;
+  --color-accent: #D5B28C; /* Cream from Logo */
+  --color-footer: #082543; /* Dark Blue from Logo */
   --color-border: #EAEAE0;
   --color-white: #FFFFFF;
   --color-error: #D32F2F;
@@ -97,12 +98,12 @@ ul {
 }
 
 .btn-primary {
-  background-color: var(--color-text);
-  color: var(--color-white);
+  background-color: var(--color-primary);
+  color: var(--color-footer); /* Dark blue text on cream buttons */
 }
 
 .btn-primary:hover {
-  background-color: #000;
+  background-color: #C4A17B; /* Slightly darker cream */
   transform: translateY(-2px);
 }
 
@@ -119,7 +120,7 @@ ul {
 
 .btn-accent {
   background-color: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-footer);
 }
 
 .title-large {
