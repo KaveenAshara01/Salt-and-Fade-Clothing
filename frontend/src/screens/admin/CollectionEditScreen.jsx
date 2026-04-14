@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, Upload, Loader } from 'lucide-react';
+import { ArrowLeft, Save, Upload } from 'lucide-react';
+import Loader from '../../components/Loader';
 import axios from 'axios';
 
 const CollectionEditScreen = () => {
@@ -111,7 +112,7 @@ const CollectionEditScreen = () => {
         {errorUpdate && <div style={{ backgroundColor: '#F8D7DA', color: '#721C24', padding: '1rem', borderRadius: '4px', marginBottom: '1rem' }}>{errorUpdate}</div>}
         {loading ? (
           <div className="flex-center" style={{ minHeight: '200px' }}>
-            <div className="spin" style={{ width: '40px', height: '40px', border: '4px solid var(--color-border)', borderTopColor: 'var(--color-primary)', borderRadius: '50%' }}></div>
+            <Loader size={60} />
           </div>
         ) : error ? (
           <div style={{ color: 'var(--color-error)' }}>{error}</div>
@@ -131,7 +132,7 @@ const CollectionEditScreen = () => {
                   <input type="file" style={{ display: 'none' }} onChange={uploadFileHandler} />
                 </label>
               </div>
-              {uploading && <div className="flex-center spin" style={{ marginTop: '0.5rem' }}><Loader size={20} /></div>}
+              {uploading && <div className="flex-center" style={{ marginTop: '0.5rem' }}><Loader size={20} /></div>}
             </div>
 
             <div style={{ marginBottom: '2rem' }}>
@@ -152,7 +153,7 @@ const CollectionEditScreen = () => {
               style={{ width: '100%', gap: '0.75rem', padding: '1rem' }}
               disabled={loadingUpdate}
             >
-              {loadingUpdate ? <Loader className="spin" size={20} /> : <Save size={20} />}
+              {loadingUpdate ? <Loader size={20} /> : <Save size={20} />}
               {isCreateMode ? 'Create Collection' : 'Update Collection'}
             </button>
           </form>

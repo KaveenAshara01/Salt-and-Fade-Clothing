@@ -62,6 +62,10 @@ const deleteProduct = async (req, res) => {
            await cloudinary.uploader.destroy(img.public_id);
          }
        }
+       // Delete size chart if exists
+       if (product.sizeChart && product.sizeChart.public_id) {
+         await cloudinary.uploader.destroy(product.sizeChart.public_id);
+       }
        await Product.deleteOne({ _id: product._id });
        res.json({ message: 'Product removed' });
     } else {
@@ -85,6 +89,7 @@ const createProduct = async (req, res) => {
       countInStock,
       description,
       collectionRef,
+      sizeChart,
     } = req.body;
 
     const product = new Product({
@@ -96,6 +101,7 @@ const createProduct = async (req, res) => {
       countInStock: countInStock || { S: 0, M: 0, L: 0, XL: 0 },
       description: description || '',
       collectionRef: collectionRef || null,
+      sizeChart: sizeChart || { url: '', public_id: '' },
     });
 
     const createdProduct = await product.save();
@@ -118,6 +124,7 @@ const updateProduct = async (req, res) => {
       category,
       countInStock,
       collectionRef,
+      sizeChart,
     } = req.body;
 
     const product = await Product.findById(req.params.id);
@@ -132,6 +139,11 @@ const updateProduct = async (req, res) => {
         for (const img of removedImages) {
           await cloudinary.uploader.destroy(img.public_id);
         }
+      }
+
+      // Handle Size Chart Cleanup
+      if (sizeChart && product.sizeChart && product.sizeChart.public_id && sizeChart.public_id !== product.sizeChart.public_id) {
+        await cloudinary.uploader.destroy(product.sizeChart.public_id);
       }
 
       product.name = name !== undefined ? name : product.name;
@@ -150,6 +162,7 @@ const updateProduct = async (req, res) => {
       }
       
       product.collectionRef = collectionRef || product.collectionRef;
+      product.sizeChart = sizeChart !== undefined ? sizeChart : product.sizeChart;
 
       const updatedProduct = await product.save();
       res.json(updatedProduct);

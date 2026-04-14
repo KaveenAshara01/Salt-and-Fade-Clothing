@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { X, LogIn, UserPlus, Mail, Lock, User as UserIcon, Loader } from 'lucide-react';
+import { X, LogIn, UserPlus, Mail, Lock, User as UserIcon } from 'lucide-react';
+import Loader from './Loader';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 
@@ -183,7 +184,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess }) => {
             disabled={loading}
             style={{ width: '100%', marginTop: '0.5rem', padding: '14px', gap: '0.5rem' }}
           >
-            {loading ? <Loader size={18} className="spin" /> : (activeTab === 'login' ? <LogIn size={18} /> : <UserPlus size={18} />)}
+            {loading ? <Loader size={18} /> : (activeTab === 'login' ? <LogIn size={18} /> : <UserPlus size={18} />)}
             {activeTab === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>

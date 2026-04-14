@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ShoppingCart, ArrowLeft, Check, ShieldCheck, Truck, AlertTriangle } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Check, ShieldCheck, Truck, AlertTriangle, X, Ruler } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const ProductScreen = () => {
@@ -14,6 +14,7 @@ const ProductScreen = () => {
   const [error, setError] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [mainImage, setMainImage] = useState('');
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
   // Zoom state
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0, show: false });
@@ -189,7 +190,25 @@ const ProductScreen = () => {
           ></div>
 
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Select Size</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Select Size</h3>
+              {product.sizeChart && product.sizeChart.url && (
+                <button 
+                  onClick={() => setIsSizeChartOpen(true)}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    fontSize: '0.85rem', 
+                    color: 'var(--color-primary)', 
+                    fontWeight: 600,
+                    textDecoration: 'underline'
+                  }}
+                >
+                  <Ruler size={14} /> Size Guide
+                </button>
+              )}
+            </div>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               {['S', 'M', 'L', 'XL'].map((size) => {
                 const count = product.countInStock[size] || 0;
@@ -264,7 +283,7 @@ const ProductScreen = () => {
           </button>
 
           <a
-            href={`https://wa.me/94762707848?text=Hello Salt %26 Fade, I'm interested in the ${product.name}.`}
+            href={`https://wa.me/94771070544?text=Hello Salt %26 Fade, I'm interested in the ${product.name}.`}
             target="_blank"
             rel="noreferrer"
             className="whatsapp-btn-mobile-only"
@@ -311,6 +330,60 @@ const ProductScreen = () => {
           </div>
         </div>
       </div>
+
+      {/* Size Chart Modal */}
+      {isSizeChartOpen && product.sizeChart && product.sizeChart.url && (
+        <div style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          zIndex: 10001, 
+          backgroundColor: 'rgba(0,0,0,0.8)', 
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{ 
+            position: 'absolute', 
+            inset: 0 
+          }} onClick={() => setIsSizeChartOpen(false)}></div>
+          
+          <div style={{ 
+            position: 'relative', 
+            maxHeight: '90vh', 
+            maxWidth: '90vw', 
+            backgroundColor: 'white',
+            borderRadius: 'var(--radius-md)',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+             <button 
+               onClick={() => setIsSizeChartOpen(false)}
+               style={{ 
+                 position: 'absolute', 
+                 top: '1rem', 
+                 right: '1rem', 
+                 backgroundColor: 'white', 
+                 borderRadius: '50%', 
+                 padding: '5px',
+                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                 zIndex: 10
+               }}
+             >
+               <X size={20} />
+             </button>
+             <div style={{ overflow: 'auto' }}>
+               <img 
+                 src={product.sizeChart.url} 
+                 alt="Size Chart" 
+                 style={{ display: 'block', maxWidth: '100%', height: 'auto' }} 
+               />
+             </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

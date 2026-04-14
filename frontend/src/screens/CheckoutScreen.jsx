@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { Truck, CreditCard, ChevronRight, CheckCircle, Info, Lock, ArrowLeft, Loader } from 'lucide-react';
+import { Truck, CreditCard, ChevronRight, CheckCircle, Info, Lock, ArrowLeft } from 'lucide-react';
+import Loader from '../components/Loader';
 import axios from 'axios';
 import LoginModal from '../components/LoginModal';
 
@@ -88,6 +89,7 @@ const CheckoutScreen = () => {
       setCreatedOrder(data);
       setIsSuccess(true);
       clearCart();
+      window.scrollTo(0, 0); // Ensure user sees success message from top
     } catch (err) {
       setError(err.response && err.response.data.message ? err.response.data.message : err.message);
     } finally {
@@ -206,7 +208,7 @@ const CheckoutScreen = () => {
           </section>
 
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '20px', fontSize: '1.1rem', gap: '1rem' }}>
-            {loading ? <Loader size={20} className="spin" /> : <Lock size={20} />}
+            {loading ? <Loader size={20} /> : <Lock size={20} />}
             {formData.paymentMethod === 'Card Payment' ? 'Pay & Place Order' : 'Confirm Order (COD)'}
           </button>
         </form>
@@ -233,7 +235,7 @@ const CheckoutScreen = () => {
                 <span>Rs. {itemsPrice.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-text-light)' }}>
-                <span>Delivery</span>
+                <span>Delivery {shippingPrice === 0 && <span style={{ color: 'var(--color-primary)', fontWeight: 700, marginLeft: '0.5rem' }}>(Free)</span>}</span>
                 <span>Rs. {shippingPrice.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 700, marginTop: '1rem', borderTop: '1px solid #ddd', paddingTop: '1.5rem' }}>

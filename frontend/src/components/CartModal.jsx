@@ -97,7 +97,7 @@ const CartModal = () => {
                 <span>Rs. {itemsPrice.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-text-light)' }}>
-                <span>Delivery Charge {cartItems.reduce((acc, i) => acc + i.qty, 0) < 3 ? '(Fixed)' : '(Bulky)'}</span>
+                <span>Delivery Charge {shippingPrice === 0 ? <span style={{ color: 'var(--color-primary)', fontWeight: 700 }}>(Free)</span> : (cartItems.reduce((acc, i) => acc + i.qty, 0) < 3 ? '(Fixed)' : '(Bulky)')}</span>
                 <span>Rs. {shippingPrice.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 700, marginTop: '0.5rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>

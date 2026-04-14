@@ -10,7 +10,14 @@ export const CartProvider = ({ children }) => {
   const { userInfo } = useUser();
   const [cartItems, setCartItems] = useState(() => {
     const localCart = localStorage.getItem('cartItems');
-    return localCart ? JSON.parse(localCart) : [];
+    if (!localCart) return [];
+    try {
+      const parsed = JSON.parse(localCart);
+      // Safety Filter: Kill any items that are missing essential data or are corrupted
+      return Array.isArray(parsed) ? parsed.filter(item => item && item.product && item.name && !isNaN(Number(item.price))) : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   const [isLoadedFromDB, setIsLoadedFromDB] = useState(false);
@@ -39,12 +46,40 @@ export const CartProvider = ({ children }) => {
     };
 
     syncCart();
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
     
-    // Calculate prices
-    const subTotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-    const totalQty = cartItems.reduce((acc, item) => acc + item.qty, 0);
-    const shipping = cartItems.length === 0 ? 0 : (totalQty < 3 ? 450 : 550);
+    // Calculate prices with heavy sanitization - if we find bad data, we actually trigger a state cleanup
+    const validItems = cartItems.filter(item => item && item.product && item.name && !isNaN(Number(item.price)));
+    
+    // If the cart has been corrupted, we silently fix it by filtering out the trash
+    if (validItems.length !== cartItems.length) {
+      setCartItems(validItems);
+      return; // The next effect cycle will handle the corrected math
+    }
+
+    localStorage.setItem('cartItems', JSON.stringify(validItems));
+
+    const subTotal = validItems.reduce((acc, item) => {
+      const price = Number(item.price) || 0;
+      const qty = Number(item.qty) || 0;
+      return acc + (price * qty);
+    }, 0);
+
+    const totalQty = validItems.reduce((acc, item) => {
+      const qty = Number(item.qty) || 0;
+      return acc + qty;
+    }, 0);
+    
+    // Priority 1: Free delivery over 6000
+    // Priority 2: 3+ items is 550
+    // Priority 3: Default is 450
+    let shipping = 0;
+    if (validItems.length > 0) {
+      if (subTotal >= 6000) {
+        shipping = 0;
+      } else {
+        shipping = totalQty >= 3 ? 550 : 450;
+      }
+    }
     
     setItemsPrice(subTotal);
     setShippingPrice(shipping);
@@ -64,14 +99,16 @@ export const CartProvider = ({ children }) => {
           const { data } = await axios.get('/api/users/cart', config);
           
           if (data) {
-            // Logic: Merge guest cart (current state) with DB cart
-            // If item exists in both, keep guest qty for a "fresh" feel, or just combine
-            const dbCart = data;
+            // Safety Filter for DB items too
+            const cleanedDbCart = Array.isArray(data) ? data.filter(item => item && item.product && item.name && !isNaN(Number(item.price))) : [];
+            const dbCart = cleanedDbCart;
             const guestCart = JSON.parse(localStorage.getItem('cartItems')) || [];
             
             const mergedCart = [...dbCart];
             
             guestCart.forEach((gItem) => {
+              if (!gItem || !gItem.product || !gItem.name) return; // Skip trash
+              
               const existingIndex = mergedCart.findIndex(
                 (dbItem) => dbItem.product === gItem.product && dbItem.size === gItem.size
               );
