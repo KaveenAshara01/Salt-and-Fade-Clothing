@@ -40,6 +40,10 @@ const productSchema = mongoose.Schema(
       L: { type: Number, required: true, default: 0 },
       XL: { type: Number, required: true, default: 0 },
     },
+    sizeChart: {
+      url: { type: String },
+      public_id: { type: String },
+    },
   },
   {
     timestamps: true,

@@ -82,10 +82,10 @@ const Header = () => {
               <Menu size={24} />
             </button>
             <div className="hide-mobile" style={{ gap: '1.5rem' }}>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="flex-center">
+              <a href="https://www.instagram.com/salt_and_fade?igsh=MWZueDJ0ZDJ2cjUyZA==" target="_blank" rel="noreferrer" className="flex-center">
                 <InstagramIcon size={20} />
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="flex-center">
+              <a href="https://www.facebook.com/share/1GSfTBfHgc/" target="_blank" rel="noreferrer" className="flex-center">
                 <FacebookIcon size={20} />
               </a>
             </div>
@@ -94,10 +94,10 @@ const Header = () => {
           {/* Logo - Centered */}
           <Link to="/" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center' }}>
             <img 
-              src="/images/logo-transparent.png" 
+              src="/images/Salt & Fade.svg" 
               alt="Salt & Fade Logo" 
               style={{ 
-                height: isScrolled ? '75px' : '130px', 
+                height: isScrolled ? '25px' : '50px', 
                 transition: 'all 0.4s ease',
                 objectFit: 'contain'
               }} 
@@ -226,8 +226,8 @@ const Header = () => {
         </div>
 
         <div style={{ display: 'flex', gap: '2rem', marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid var(--color-border)' }}>
-          <a href="https://instagram.com" target="_blank" rel="noreferrer"><InstagramIcon size={24} /></a>
-          <a href="https://facebook.com" target="_blank" rel="noreferrer"><FacebookIcon size={24} /></a>
+          <a href="https://www.instagram.com/salt_and_fade?igsh=MWZueDJ0ZDJ2cjUyZA==" target="_blank" rel="noreferrer"><InstagramIcon size={24} /></a>
+          <a href="https://www.facebook.com/share/1GSfTBfHgc/" target="_blank" rel="noreferrer"><FacebookIcon size={24} /></a>
         </div>
       </div>
     </>

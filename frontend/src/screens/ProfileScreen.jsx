@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { User, ShoppingBag, Package, ChevronRight, LogOut, Clock, Truck, CheckCircle } from 'lucide-react';
+import { User, ShoppingBag, Package, ChevronRight, LogOut, Clock, Truck, CheckCircle, ExternalLink } from 'lucide-react';
 
 const ProfileScreen = () => {
   const navigate = useNavigate();
@@ -41,6 +41,22 @@ const ProfileScreen = () => {
     navigate('/login');
   };
 
+  const getImagePath = (path) => {
+    if (!path) return '/images/logo.jpg';
+    
+    // If it's a Cloudinary URL, use it directly (absolute)
+    if (path.startsWith('https://res.cloudinary.com')) {
+      return path;
+    }
+
+    // If it's another absolute URL (like localhost for dev)
+    if (path.startsWith('http')) {
+      return path.replace(/^http(s)?:\/\/(localhost|127\.0\.0\.1):5000/, '');
+    }
+
+    return path.startsWith('/') ? path : `/${path}`;
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Processing': return '#3B82F6'; // Blue
@@ -63,8 +79,8 @@ const ProfileScreen = () => {
   if (!userInfo) return null;
 
   return (
-    <div className="container" style={{ padding: '120px 24px 60px', minHeight: '80vh' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 300px) 1fr', gap: '4rem', alignItems: 'start' }}>
+    <div className="container" style={{ padding: 'max(90px, 120px) var(--container-padding) 60px', minHeight: '80vh' }}>
+      <div className="profile-grid">
         
         {/* Sidebar Info */}
         <aside style={{ backgroundColor: 'var(--color-bg)', padding: '2.5rem', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
@@ -105,8 +121,8 @@ const ProfileScreen = () => {
                   <div key={order._id} style={{ border: '1px solid #f0f0f0', borderRadius: 'var(--radius-md)', backgroundColor: '#fff', overflow: 'hidden' }}>
                     
                     {/* Order Header */}
-                    <div style={{ padding: '1.5rem', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fafafa' }}>
-                       <div style={{ display: 'flex', gap: '2rem' }}>
+                    <div className="order-card-header" style={{ padding: '1.5rem', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fafafa' }}>
+                       <div className="order-metadata-flex">
                           <div>
                             <p style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.25rem' }}>Order Number</p>
                             <p style={{ fontWeight: 700, color: 'var(--color-primary)' }}>#{order.orderNumber}</p>
@@ -141,7 +157,16 @@ const ProfileScreen = () => {
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                           {order.orderItems.map((item, idx) => (
                             <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                               <img src={item.image} alt={item.name} style={{ width: '40px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                               <img 
+                                 src={getImagePath(item.image)} 
+                                 alt={item.name} 
+                                 onError={(e) => { 
+                                   if (e.target.src.indexOf('/images/logo.jpg') === -1) {
+                                     e.target.src = '/images/logo.jpg';
+                                   }
+                                 }}
+                                 style={{ width: '40px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} 
+                               />
                                <div style={{ flex: 1 }}>
                                   <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{item.name}</p>
                                   <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Size: {item.size} × {item.qty}</p>
@@ -154,9 +179,20 @@ const ProfileScreen = () => {
 
                     {/* Order Footer - Tracking */}
                     {order.trackingId && (
-                       <div style={{ padding: '1.25rem 1.5rem', backgroundColor: '#f0f4f2', borderTop: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Tracking ID:</span>
-                          <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-primary)', letterSpacing: '2px' }}>{order.trackingId}</span>
+                       <div className="order-tracking-footer" style={{ padding: '1.25rem 1.5rem', backgroundColor: '#f0f4f2', borderTop: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                          <div className="order-tracking-id-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Tracking ID:</span>
+                             <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-primary)', letterSpacing: '2px' }}>{order.trackingId}</span>
+                          </div>
+                          <a 
+                            href={`https://domex.lk/Order-Details.php?wbno=${order.trackingId}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn btn-primary order-track-btn"
+                            style={{ padding: '8px 16px', fontSize: '0.85rem', gap: '0.5rem' }}
+                          >
+                            <ExternalLink size={16} /> Track your order
+                          </a>
                        </div>
                     )}
                   </div>

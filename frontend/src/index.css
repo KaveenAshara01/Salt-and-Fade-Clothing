@@ -1,14 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Caveat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Caveat:wght@400;700&family=Shadows+Into+Light&display=swap');
 
 :root {
   /* Salt and Fade Palette */
-  --color-bg: #FDF8F4; /* Light Cream from Logo */
+  --color-bg: #F9F1E7; /* Slightly Darker Cream */
+  --color-loader-bg: #f6eee3; /* Exact color from loading.jpeg corner */
   --color-text: #222222; /* Charcoal */
   --color-text-light: #666666;
   --color-primary: #D5B28C; /* Cream from Logo */
   --color-primary-light: #C4A17B;
   --color-accent: #D5B28C; /* Cream from Logo */
-  --color-footer: #082543; /* Dark Blue from Logo */
+  --color-footer: #263240; /* Updated Footer Color from sample */
   --color-border: #EAEAE0;
   --color-white: #FFFFFF;
   --color-error: #D32F2F;
@@ -132,11 +133,13 @@ ul {
 }
 
 .title-handwritten {
-  font-family: var(--font-main);
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 4px;
-  line-height: 1;
+  font-family: 'Shadows Into Light', cursive;
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  display: inline-block;
+  color: var(--color-white);
 }
 
 .title-medium {
@@ -1184,5 +1187,91 @@ ul {
   
   .admin-search-container {
     width: 100% !important;
+  }
+}
+
+/* Custom Loader & Splash Styles */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.loader-container.full-screen {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-loader-bg);
+  z-index: 10000;
+}
+
+.loader-img {
+  width: 350px;
+  height: auto;
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.loader-img.inline {
+  width: 24px;
+  border-radius: 2px;
+  box-shadow: none;
+  animation: pulse-soft 1.5s ease-in-out infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* Profile & Orders Responsive Utilities */
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.order-metadata-flex {
+  display: flex;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1.5rem !important;
+  }
+
+  .order-metadata-flex {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .order-tracking-footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .order-tracking-id-container {
+    width: 100%;
+  }
+
+  .order-track-btn {
+    width: 100% !important;
+    text-align: center;
+    justify-content: center;
   }
 }

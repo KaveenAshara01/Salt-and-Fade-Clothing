@@ -19,13 +19,13 @@ const HomeScreen = () => {
         setLoading(true);
         const { data } = await axios.get(`/api/products${collectionId ? `?collection=${collectionId}` : ''}`);
         setProducts(data);
-        
+
         if (collectionId && data.length > 0 && data[0].collectionRef) {
           setCollectionName(data[0].collectionRef.name);
         } else {
           setCollectionName('');
         }
-        
+
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -41,7 +41,7 @@ const HomeScreen = () => {
         console.error('Error fetching collections:', err);
       }
     };
-    
+
     fetchProducts();
     fetchCollections();
   }, [collectionId]);
@@ -50,11 +50,11 @@ const HomeScreen = () => {
     <>
       {/* Hero Section - Only show on main shop page or home */}
       {!collectionId && (
-        <section style={{ 
-          position: 'relative', 
-          minHeight: '70vh', 
-          display: 'flex', 
-          alignItems: 'center', 
+        <section style={{
+          position: 'relative',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
           background: '#e0d8d0 url("/images/hero_1.png") center/cover no-repeat',
           overflow: 'hidden'
@@ -62,16 +62,17 @@ const HomeScreen = () => {
           <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}></div>
           <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 10, textAlign: 'center', color: 'var(--color-white)', paddingTop: '80px' }}>
             <h1 className="title-handwritten" style={{ 
-              fontSize: 'clamp(4rem, 10vw, 7.5rem)', 
-              textShadow: '0 2px 8px rgba(0,0,0,0.2)',
+              fontSize: 'clamp(4rem, 11vw, 8rem)', 
+              textShadow: '0 2px 12px rgba(0,0,0,0.2)',
               color: 'var(--color-white)',
-              lineHeight: 0.9,
+              lineHeight: 1.2,
+              textAlign: 'center',
               marginBottom: '2rem'
             }}>
-              Elevate Your <br /> Everyday
+              Made for <br /> island days
             </h1>
             <p className="subtitle" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: '600px', margin: '0 auto 2.5rem', fontSize: '1.25rem' }}>
-              Premium streetwear crafted for the golden hour. Modern cuts, unmatched comfort.
+              Every essential is a part of Island
             </p>
           </div>
         </section>
@@ -95,13 +96,13 @@ const HomeScreen = () => {
             <div style={{ textAlign: 'center', padding: '4rem' }}>No products found in this collection.</div>
           ) : (
             <>
-            <div className="product-grid-scroll">
+              <div className="product-grid-scroll">
                 {products.slice(0, collectionId ? undefined : 8).map((product) => (
                   <div key={product._id} className="product-card">
                     <Link to={`/product/${product._id}`}>
                       <div className="product-image-container">
                         <img
-                          src={product.images && product.images.length > 0 ? product.images[0].url : '/images/sample.jpg'}
+                          src={product.images && product.images.length > 0 ? product.images[0].url : '/images/logo.jpg'}
                           alt={product.name}
                         />
                       </div>
@@ -109,10 +110,10 @@ const HomeScreen = () => {
                         <h3 className="product-title">{product.name}</h3>
                         <p className="product-price">
                           {new Intl.NumberFormat('en-LK', {
-                              style: 'currency',
-                              currency: 'LKR',
-                              currencyDisplay: 'code',
-                              minimumFractionDigits: 2
+                            style: 'currency',
+                            currency: 'LKR',
+                            currencyDisplay: 'code',
+                            minimumFractionDigits: 2
                           }).format(product.price).replace('LKR', 'Rs').trim()} LKR
                         </p>
                       </div>
@@ -120,17 +121,17 @@ const HomeScreen = () => {
                   </div>
                 ))}
               </div>
-              
+
               {!collectionId && products.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
-                  <Link 
-                    to="/products?sort=latest" 
+                  <Link
+                    to="/products?sort=latest"
                     className="btn btn-primary"
-                    style={{ 
-                      padding: '14px 40px', 
-                      backgroundColor: 'var(--color-primary)', 
+                    style={{
+                      padding: '14px 40px',
+                      backgroundColor: 'var(--color-primary)',
                       color: 'var(--color-footer)',
-                      borderRadius: '2px', 
+                      borderRadius: '2px',
                       fontSize: '0.85rem',
                       letterSpacing: '1.5px',
                       fontWeight: 700
@@ -149,13 +150,13 @@ const HomeScreen = () => {
       {!collectionId && (
         <section style={{ padding: '3rem 0 4rem', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
           <div className="container vibe-section-grid">
-            
+
             {/* Left Column: Image */}
             <div style={{ position: 'relative', aspectRatio: '1.2 / 1', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-              <img 
-                src="/images/hero_2.png" 
-                alt="Brand Vibe" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              <img
+                src="/images/hero_2.png"
+                alt="Brand Vibe"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
 
@@ -165,20 +166,20 @@ const HomeScreen = () => {
                 Chasing the Golden Era.
               </h2>
               <p style={{ fontSize: '1rem', lineHeight: 1.8, color: '#444', fontWeight: 400 }}>
-                Salt and Fade is born from the tropical heat of the Sri Lankan south coast. 
-                Our mission is simple: to bring you premium, independent surfwear that feels like a summer's day. 
-                Whether you're cruising a surf break or enjoying a bloody gem of a coffee, we have everything you could ever need. 
+                Salt and Fade is born from the tropical heat of the Sri Lankan south coast.
+                Our mission is simple: to bring you premium, independent surfwear that feels like a summer's day.
+                Whether you're cruising a surf break or enjoying a bloody gem of a coffee, we have everything you could ever need.
                 Clean. Chill. Original.
               </p>
-              <Link 
-                to="/about" 
-                className="btn btn-primary" 
-                style={{ 
-                  width: 'fit-content', 
-                  padding: '14px 28px', 
-                  backgroundColor: 'var(--color-primary)', 
+              <Link
+                to="/about"
+                className="btn btn-primary"
+                style={{
+                  width: 'fit-content',
+                  padding: '14px 28px',
+                  backgroundColor: 'var(--color-primary)',
                   color: 'var(--color-footer)',
-                  borderRadius: '2px', 
+                  borderRadius: '2px',
                   fontSize: '0.8rem',
                   letterSpacing: '1.5px'
                 }}
@@ -199,7 +200,7 @@ const HomeScreen = () => {
               <h2>Shop Our Collections</h2>
               <p>Tailored essentials for every vibe.</p>
             </div>
-            
+
             <div className="collection-grid-scroll">
               {collections.map((c) => (
                 <Link key={c._id} to={`/products?collection=${c._id}&sort=latest`} className="collection-card">
@@ -229,71 +230,71 @@ const HomeScreen = () => {
         <div className="reviews-marquee-container">
           <div className="reviews-marquee-content">
             {[
-              { 
-                name: 'Dinuka Perera', 
-                city: 'Colombo', 
+              {
+                name: 'Dinuka Perera',
+                city: 'Colombo',
                 review: "The quality is unmatched. I've bought premium brands from overseas, but Salt & Fade holds its shape better in our humidity.",
                 rating: 5
               },
-              { 
-                name: 'Amali Wickramasinghe', 
-                city: 'Kandy', 
+              {
+                name: 'Amali Wickramasinghe',
+                city: 'Kandy',
                 review: "Finally a brand that keeps it simple and original. The fit of the oversized tees is perfect. Love the finish.",
                 rating: 5
               },
-              { 
-                name: 'Tharindu Silva', 
-                city: 'Galle', 
+              {
+                name: 'Tharindu Silva',
+                city: 'Galle',
                 review: "Salt and Fade in the salt. I wear these to the surf and then to a meeting. Versatile and durable.",
                 rating: 5
               },
-              { 
-                name: 'Kasun Jayasundara', 
-                city: 'Negombo', 
+              {
+                name: 'Kasun Jayasundara',
+                city: 'Negombo',
                 review: "Quick delivery and even better products. The corduroy hats are a bloody gem for beach days.",
                 rating: 5
               },
-              { 
-                name: 'Sandani de Silva', 
-                city: 'Matara', 
+              {
+                name: 'Sandani de Silva',
+                city: 'Matara',
                 review: "International standard streetwear right here in SL. The fabric feels like luxury on the skin.",
                 rating: 5
               }
             ].concat([
-              { 
-                name: 'Dinuka Perera', 
-                city: 'Colombo', 
+              {
+                name: 'Dinuka Perera',
+                city: 'Colombo',
                 review: "The quality is unmatched. I've bought premium brands from overseas, but Salt & Fade holds its shape better in our humidity.",
                 rating: 5
               },
-              { 
-                name: 'Amali Wickramasinghe', 
-                city: 'Kandy', 
+              {
+                name: 'Amali Wickramasinghe',
+                city: 'Kandy',
                 review: "Finally a brand that keeps it simple and original. The fit of the oversized tees is perfect. Love the finish.",
                 rating: 5
               },
-              { 
-                name: 'Tharindu Silva', 
-                city: 'Galle', 
+              {
+                name: 'Tharindu Silva',
+                city: 'Galle',
                 review: "Salt and Fade in the salt. I wear these to the surf and then to a meeting. Versatile and durable.",
                 rating: 5
               },
-              { 
-                name: 'Kasun Jayasundara', 
-                city: 'Negombo', 
+              {
+                name: 'Kasun Jayasundara',
+                city: 'Negombo',
                 review: "Quick delivery and even better products. The corduroy hats are a bloody gem for beach days.",
                 rating: 5
               },
-              { 
-                name: 'Sandani de Silva', 
-                city: 'Matara', 
+              {
+                name: 'Sandani de Silva',
+                city: 'Matara',
                 review: "International standard streetwear right here in SL. The fabric feels like luxury on the skin.",
                 rating: 5
               }
             ]).map((r, i) => (
-              <div key={i} style={{ 
-                padding: '2rem 2.5rem', 
-                backgroundColor: '#f9f9f9', 
+              <div key={i} style={{
+                padding: '2rem 2.5rem',
+                backgroundColor: '#f9f9f9',
                 borderRadius: 'var(--radius-sm)',
                 minWidth: '350px',
                 width: '350px',
@@ -308,12 +309,12 @@ const HomeScreen = () => {
                     <span key={i} style={{ fontSize: '1rem' }}>★</span>
                   ))}
                 </div>
-                <p style={{ 
-                  fontStyle: 'italic', 
-                  color: '#444', 
-                  lineHeight: 1.6, 
+                <p style={{
+                  fontStyle: 'italic',
+                  color: '#444',
+                  lineHeight: 1.6,
                   fontSize: '0.95rem',
-                  flex: 1 
+                  flex: 1
                 }}>
                   "{r.review}"
                 </p>
