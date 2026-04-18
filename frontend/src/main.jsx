@@ -15,6 +15,7 @@ import CartScreen from './screens/CartScreen.jsx';
 import LoginScreen from './screens/LoginScreen.jsx';
 import RegisterScreen from './screens/RegisterScreen.jsx';
 import AboutScreen from './screens/AboutScreen.jsx';
+import ReturnsPolicyScreen from './screens/ReturnsPolicyScreen.jsx';
 import ShopScreen from './screens/ShopScreen.jsx';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen.jsx';
 import ResetPasswordScreen from './screens/ResetPasswordScreen.jsx';
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
       <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
       <Route path="/reset-password/:token" element={<ResetPasswordScreen />} />
       <Route path="/about" element={<AboutScreen />} />
+      <Route path="/returns" element={<ReturnsPolicyScreen />} />
       
       {/* Admin Routes */}
       <Route path="/admin/productlist" element={<ProductListScreen />} />

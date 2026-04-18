@@ -55,6 +55,7 @@ const Footer = () => {
             <h3 style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1.5rem', letterSpacing: '1px', color: '#555' }}>Company</h3>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
               <li><Link to="/about" className="footer-link">Our Story</Link></li>
+              <li><Link to="/returns" className="footer-link">Returns & Exchanges</Link></li>
             </ul>
           </div>
 
@@ -103,6 +104,7 @@ const Footer = () => {
                 <h3 style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1.25rem', color: '#555' }}>Company</h3>
                 <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <li><Link to="/about" className="footer-link">Our Story</Link></li>
+                  <li><Link to="/returns" className="footer-link">Returns & Exchanges</Link></li>
                 </ul>
               </div>
             </div>

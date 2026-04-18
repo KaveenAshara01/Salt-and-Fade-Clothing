@@ -125,6 +125,10 @@ const AdminOrderListScreen = () => {
                   <td data-label="Customer" style={{ padding: '1.5rem' }}>
                     <p style={{ fontWeight: 600 }}>{order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>{order.shippingAddress.email}</p>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginTop: '0.25rem' }}>
+                      {order.shippingAddress.phoneNumber} 
+                      {order.shippingAddress.phoneNumber2 && ` / ${order.shippingAddress.phoneNumber2}`}
+                    </p>
                   </td>
                   <td data-label="Date" style={{ padding: '1.5rem' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td data-label="Total" style={{ padding: '1.5rem', fontWeight: 600 }}>Rs. {order.totalPrice.toLocaleString()}</td>

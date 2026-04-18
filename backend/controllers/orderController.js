@@ -49,10 +49,10 @@ const sendOrderEmail = async (order, type = 'buyer') => {
 
         <div style="text-align: center; margin-bottom: 30px;">
            ${isBuyer
-        ? `<h2 style="color: #1D4E3A; font-size: 1.6rem; margin-bottom: 15px; letter-spacing: 1px;">THANK YOU FOR YOUR ORDER!</h2>
+        ? `<h2 style="color: #111; font-size: 1.6rem; margin-bottom: 15px; letter-spacing: 1px;">THANK YOU FOR YOUR ORDER!</h2>
                 <p style="color: #333; font-size: 1.1rem; font-weight: 500; margin-bottom: 5px;">We really appreciate your support.</p>
                 <p style="color: #666; font-size: 0.95rem; line-height: 1.6;">Your Salt & Fade order is confirmed and will be packed with care. <br/>Enjoy repping the vibe — Clean. Chill. Original.</p>`
-        : `<h2 style="color: #1D4E3A; font-size: 1.6rem; margin-bottom: 10px;">NEW ORDER RECEIVED</h2>
+        : `<h2 style="color: #111; font-size: 1.6rem; margin-bottom: 10px;">NEW ORDER RECEIVED</h2>
                 <p style="color: #666; font-size: 1rem;">Order #${order.orderNumber} has been placed by ${order.shippingAddress.firstName} ${order.shippingAddress.lastName}.</p>`
       }
         </div>
@@ -60,12 +60,12 @@ const sendOrderEmail = async (order, type = 'buyer') => {
         <div style="background-color: #fafafa; padding: 25px; border-radius: 8px; margin-bottom: 30px;">
            <p style="margin: 5px 0;">Order Number: <strong>#${order.orderNumber}</strong></p>
            <p style="margin: 5px 0;">Date: <strong>${new Date(order.createdAt).toLocaleDateString()}</strong></p>
-           <p style="margin: 5px 0;">Status: <strong style="color: #1D4E3A;">Processing</strong></p>
+           <p style="margin: 5px 0;">Status: <strong style="color: #111;">Processing</strong></p>
         </div>
 
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <thead>
-            <tr style="border-bottom: 2px solid #1D4E3A;">
+            <tr style="border-bottom: 2px solid #111;">
               <th style="padding: 10px 0; text-align: left; font-size: 13px; text-transform: uppercase;">Product</th>
               <th style="padding: 10px 0; text-align: center; font-size: 13px; text-transform: uppercase;">Qty</th>
               <th style="padding: 10px 0; text-align: right; font-size: 13px; text-transform: uppercase;">Price</th>
@@ -88,7 +88,7 @@ const sendOrderEmail = async (order, type = 'buyer') => {
               </div>
            </div>
            <div style="display: flex; justify-content: flex-end;">
-              <div style="text-align: right; font-size: 20px; font-weight: 800; color: #1D4E3A; width: 100%;">
+              <div style="text-align: right; font-size: 20px; font-weight: 800; color: #111; width: 100%;">
                  TOTAL: Rs. ${order.totalPrice.toLocaleString()} LKR
               </div>
            </div>
@@ -146,14 +146,15 @@ const sendShippingEmail = async (order) => {
         </div>
 
         <div style="text-align: center; margin-bottom: 30px;">
-           <h2 style="color: #1D4E3A; font-size: 1.6rem; margin-bottom: 15px; letter-spacing: 1px;">YOUR ORDER IS ON THE WAY!</h2>
+           <h2 style="color: #111; font-size: 1.6rem; margin-bottom: 15px; letter-spacing: 1px;">YOUR ORDER IS ON THE WAY!</h2>
            <p style="color: #666; font-size: 1rem; line-height: 1.6;">Order #${order.orderNumber} has been shipped and is heading to you.</p>
         </div>
 
         <div style="background-color: #f9f9f9; padding: 30px; border-radius: 8px; text-align: center; margin-bottom: 30px;">
           <p style="text-transform: uppercase; font-size: 12px; color: #999; margin-bottom: 8px; letter-spacing: 1px;">Tracking Number</p>
-          <h3 style="font-size: 24px; color: #1D4E3A; margin: 0; letter-spacing: 2px;">${order.trackingId}</h3>
+          <h3 style="font-size: 24px; color: #111; margin: 0; letter-spacing: 2px;">${order.trackingId}</h3>
           <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">You can use this ID to track your delivery status with our partner courier.</p>
+          <a href="https://domex.lk/Order-Details.php?wbno=${order.trackingId}" style="display: inline-block; margin-top: 20px; background-color: #111; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; letter-spacing: 1px;">Track Your Order</a>
         </div>
 
         <div style="margin-top: 40px; text-align: center; font-size: 0.9rem; color: #444; border-top: 1px solid #eee; padding-top: 30px;">
@@ -208,6 +209,28 @@ const addOrderItems = async (req, res) => {
     if (orderItems && orderItems.length === 0) {
       res.status(400).json({ message: 'No order items' });
       return;
+    }
+
+    // 0.5. Pre-flight Stock Validation Loop
+    for (const item of orderItems) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(404).json({ message: `Product "${item.name}" not found.` });
+      }
+      
+      const availableStock = product.countInStock ? product.countInStock[item.size] : 0;
+      
+      if (typeof availableStock !== 'number' || availableStock < item.qty) {
+        if (availableStock <= 0) {
+           return res.status(400).json({ 
+             message: `Sorry! "${item.name}" (Size: ${item.size}) is currently out of stock.` 
+           });
+        } else {
+           return res.status(400).json({ 
+             message: `Sorry! We only have ${availableStock} units of "${item.name}" (Size: ${item.size}) left in stock.` 
+           });
+        }
+      }
     }
 
     // 1. Generate sequential order number
@@ -316,9 +339,48 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+// @desc    Validate cart against live stock
+// @route   POST /api/orders/validate-cart
+// @access  Public
+const validateCart = async (req, res) => {
+  try {
+    const { cartItems } = req.body;
+    
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(400).json({ message: 'No items in cart' });
+    }
+
+    for (const item of cartItems) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(404).json({ message: `Product "${item.name}" not found.` });
+      }
+      
+      const availableStock = product.countInStock ? product.countInStock[item.size] : 0;
+      
+      if (typeof availableStock !== 'number' || availableStock < item.qty) {
+        if (availableStock <= 0) {
+           return res.status(400).json({ 
+             message: `Sorry! "${item.name}" (Size: ${item.size}) is currently out of stock.` 
+           });
+        } else {
+           return res.status(400).json({ 
+             message: `Sorry! We only have ${availableStock} units of "${item.name}" (Size: ${item.size}) left in stock.` 
+           });
+        }
+      }
+    }
+
+    res.status(200).json({ message: 'Cart valid' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addOrderItems,
   getMyOrders,
   getOrders,
   updateOrderStatus,
+  validateCart,
 };

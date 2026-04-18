@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash, ExternalLink } from 'lucide-react';
+import { Plus, Edit, Trash, ExternalLink, GripVertical } from 'lucide-react';
 import axios from 'axios';
 import AdminNav from '../../components/AdminNav';
 
@@ -61,6 +61,53 @@ const ProductListScreen = () => {
     navigate('/admin/product/create');
   };
 
+  const dragItem = useRef();
+  const dragOverItem = useRef();
+
+  const handleDragStart = (e, position) => {
+    dragItem.current = position;
+    e.target.style.opacity = '0.5';
+  };
+
+  const handleDragEnter = (e, position) => {
+    dragOverItem.current = position;
+  };
+
+  const handleDragEnd = async (e) => {
+    e.target.style.opacity = '1';
+    if (dragItem.current === null || dragOverItem.current === null || dragItem.current === dragOverItem.current) {
+      dragItem.current = null;
+      dragOverItem.current = null;
+      return;
+    }
+
+    const copyListItems = [...products];
+    const dragItemContent = copyListItems[dragItem.current];
+    copyListItems.splice(dragItem.current, 1);
+    copyListItems.splice(dragOverItem.current, 0, dragItemContent);
+    
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setProducts(copyListItems);
+
+    try {
+      const orderedIds = copyListItems.map(p => p._id);
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      await axios.put('/api/products/reorder', { orderedIds }, config);
+    } catch (err) {
+      setError('Reordering failed. Please refresh the page.');
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="container" style={{ padding: '120px 24px 60px' }}>
       <AdminNav />
@@ -83,6 +130,7 @@ const ProductListScreen = () => {
           <table className="admin-table-responsive" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--color-white)', boxShadow: 'var(--shadow-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--color-border)', textAlign: 'left' }}>
+                <th style={{ padding: '1rem', width: '40px' }}></th>
                 <th style={{ padding: '1rem' }}>ID</th>
                 <th style={{ padding: '1rem' }}>PHOTO</th>
                 <th style={{ padding: '1rem' }}>NAME</th>
@@ -93,8 +141,19 @@ const ProductListScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr key={product._id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+              {products.map((product, index) => (
+                <tr 
+                  key={product._id} 
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={handleDragOver}
+                  style={{ borderBottom: '1px solid var(--color-border)', cursor: 'grab', transition: 'background-color 0.2s' }}
+                >
+                  <td style={{ padding: '1rem', color: '#999', cursor: 'grab' }}>
+                    <GripVertical size={16} />
+                  </td>
                   <td data-label="ID" style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>{product._id}</td>
                   <td data-label="PHOTO" style={{ padding: '1rem' }}>
                     <img 

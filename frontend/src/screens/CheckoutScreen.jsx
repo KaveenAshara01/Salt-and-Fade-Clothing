@@ -19,6 +19,8 @@ const CheckoutScreen = () => {
     firstName: userInfo?.name.split(' ')[0] || '',
     lastName: userInfo?.name.split(' ')[1] || '',
     email: userInfo?.email || '',
+    phoneNumber: userInfo?.phone || '',
+    phoneNumber2: '',
     address: '',
     city: '',
     postalCode: '',
@@ -72,6 +74,8 @@ const CheckoutScreen = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          phoneNumber2: formData.phoneNumber2,
           address: formData.address,
           city: formData.city,
           postalCode: formData.postalCode,
@@ -148,8 +152,21 @@ const CheckoutScreen = () => {
             )}
 
             {error && (
-              <div style={{ backgroundColor: '#fff5f5', color: 'var(--color-error)', padding: '1rem', borderRadius: 'var(--radius-sm)', marginBottom: '2rem', border: '1px solid #ffebeb' }}>
-                {error}
+              <div style={{ 
+                backgroundColor: '#fff0f0', 
+                color: '#d32f2f', 
+                padding: '1.25rem', 
+                borderRadius: '8px', 
+                marginBottom: '2rem', 
+                borderLeft: '4px solid #d32f2f',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                fontWeight: 500,
+                boxShadow: '0 2px 8px rgba(211, 47, 47, 0.1)'
+              }}>
+                <Info size={24} style={{ color: '#d32f2f', minWidth: '24px' }} />
+                <span>{error}</span>
               </div>
             )}
 
@@ -157,6 +174,8 @@ const CheckoutScreen = () => {
                <input type="text" name="firstName" placeholder="First Name *" className="input-field" required value={formData.firstName} onChange={handleInputChange} />
                <input type="text" name="lastName" placeholder="Last Name *" className="input-field" required value={formData.lastName} onChange={handleInputChange} />
                <input type="email" name="email" placeholder="Email Address *" className="input-field" style={{ gridColumn: 'span 2' }} required value={formData.email} onChange={handleInputChange} />
+               <input type="tel" name="phoneNumber" placeholder="Phone Number 1 (Required) *" className="input-field" required value={formData.phoneNumber} onChange={handleInputChange} />
+               <input type="tel" name="phoneNumber2" placeholder="Phone Number 2 (Optional)" className="input-field" value={formData.phoneNumber2} onChange={handleInputChange} />
                <input type="text" name="address" placeholder="Residential Address *" className="input-field" style={{ gridColumn: 'span 2' }} required value={formData.address} onChange={handleInputChange} />
                <input type="text" name="city" placeholder="City *" className="input-field" required value={formData.city} onChange={handleInputChange} />
                <input type="text" name="postalCode" placeholder="Postal / Zip Code" className="input-field" value={formData.postalCode} onChange={handleInputChange} />
