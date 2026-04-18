@@ -75,7 +75,10 @@ const LoginScreen = () => {
           </div>
           
           <div>
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.9rem', textTransform: 'uppercase' }}>Password</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <label htmlFor="password" style={{ display: 'block', fontWeight: 600, fontSize: '0.9rem', textTransform: 'uppercase', marginBottom: 0 }}>Password</label>
+              <Link to="/forgot-password" style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', fontWeight: 500 }}>Forgot Password?</Link>
+            </div>
             <input 
               type="password" 
               id="password" 
