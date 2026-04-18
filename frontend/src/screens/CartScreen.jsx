@@ -1,6 +1,8 @@
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trash, Minus, Plus, ShoppingBag, ArrowRight, LogIn } from 'lucide-react';
+import { Trash, Minus, Plus, ShoppingBag, ArrowRight, LogIn, Info } from 'lucide-react';
+import { useState } from 'react';
+import axios from 'axios';
 
 const CartScreen = () => {
   const { cartItems, removeFromCart, updateQty, itemsPrice, shippingPrice, totalPrice } = useCart();
@@ -15,13 +17,44 @@ const CartScreen = () => {
     }
   };
 
-  const checkoutHandler = () => {
-    navigate('/checkout');
+  const [checkoutError, setCheckoutError] = useState(null);
+  const [isValidating, setIsValidating] = useState(false);
+
+  const checkoutHandler = async () => {
+    try {
+      setIsValidating(true);
+      setCheckoutError(null);
+      await axios.post('/api/orders/validate-cart', { cartItems });
+      navigate('/checkout');
+    } catch (err) {
+      setCheckoutError(err.response && err.response.data.message ? err.response.data.message : err.message);
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   return (
     <div className="container" style={{ padding: 'max(90px, 120px) var(--container-padding) 60px', minHeight: '80vh' }}>
       <h1 className="title-medium" style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', marginBottom: '3rem' }}>Shopping Cart</h1>
+
+      {checkoutError && (
+        <div style={{ 
+          backgroundColor: '#fff0f0', 
+          color: '#d32f2f', 
+          padding: '1.25rem', 
+          borderRadius: '8px', 
+          marginBottom: '2rem', 
+          borderLeft: '4px solid #d32f2f',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          fontWeight: 500,
+          boxShadow: '0 2px 8px rgba(211, 47, 47, 0.1)'
+        }}>
+          <Info size={24} style={{ color: '#d32f2f', minWidth: '24px' }} />
+          <span>{checkoutError}</span>
+        </div>
+      )}
 
       {cartItems.length === 0 ? (
         <div style={{ padding: '4rem', backgroundColor: '#f9f9f9', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
@@ -96,9 +129,12 @@ const CartScreen = () => {
             <button 
               className="btn btn-primary" 
               onClick={checkoutHandler} 
+              disabled={isValidating}
               style={{ width: '100%', padding: '20px', fontSize: '1.1rem', gap: '0.75rem', borderRadius: '4px' }}
             >
-              Checkout Now <ArrowRight size={20} />
+              {isValidating ? 'Validating Stock...' : (
+                <>Checkout Now <ArrowRight size={20} /></>
+              )}
             </button>
             
             <Link to="/" style={{ display: 'block', textAlign: 'center', marginTop: '1.5rem', color: 'var(--color-text-light)', textDecoration: 'underline', fontSize: '0.9rem' }}>

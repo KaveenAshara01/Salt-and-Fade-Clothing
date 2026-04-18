@@ -244,23 +244,49 @@ const ShopScreen = () => {
               </div>
             ) : (
               <div className="product-grid">
-                {products.map((product) => (
-                  <div key={product._id} className="product-card">
-                    <Link to={`/product/${product._id}`}>
-                      <div className="product-image-container">
-                        <img
-                          src={product.images && product.images.length > 0 ? product.images[0].url : '/images/sample.jpg'}
-                          alt={product.name}
-                          style={{ transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
-                        />
-                        <button 
-                          className="quick-add-btn" 
-                          onClick={(e) => handleQuickAdd(e, product)}
-                          title="Add to Cart"
-                        >
-                          <ShoppingBag size={18} />
-                        </button>
-                      </div>
+                {products.map((product) => {
+                  const isOutOfStock = product.countInStock ? Object.values(product.countInStock).reduce((a, b) => a + Number(b), 0) === 0 : true;
+                  return (
+                    <div key={product._id} className="product-card">
+                      <Link to={`/product/${product._id}`}>
+                        <div className="product-image-container" style={{ position: 'relative' }}>
+                          <img
+                            src={product.images && product.images.length > 0 ? product.images[0].url : '/images/sample.jpg'}
+                            alt={product.name}
+                            style={{ transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                          />
+                          {isOutOfStock && (
+                            <div style={{
+                              position: 'absolute',
+                              inset: 0,
+                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                              backdropFilter: 'blur(3px)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              zIndex: 2,
+                            }}>
+                              <span style={{
+                                backgroundColor: '#1a1a1a',
+                                color: '#fff',
+                                padding: '8px 20px',
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                letterSpacing: '2px',
+                                textTransform: 'uppercase',
+                              }}>Sold Out</span>
+                            </div>
+                          )}
+                          {!isOutOfStock && (
+                            <button 
+                              className="quick-add-btn" 
+                              onClick={(e) => handleQuickAdd(e, product)}
+                              title="Add to Cart"
+                            >
+                              <ShoppingBag size={18} />
+                            </button>
+                          )}
+                        </div>
                       <div className="product-info">
                         <h3 className="product-title" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>{product.name}</h3>
                         <p className="product-price">
@@ -271,7 +297,7 @@ const ShopScreen = () => {
                       </div>
                     </Link>
                   </div>
-                ))}
+                )})}
               </div>
             )}
           </main>

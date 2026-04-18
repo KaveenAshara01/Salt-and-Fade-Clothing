@@ -16,10 +16,10 @@ const getProducts = async (req, res) => {
     const sort = req.query.sort;
     const query = collectionId ? { collectionRef: collectionId } : {};
     
-    let sortQuery = { createdAt: -1 }; // Default: Latest
+    let sortQuery = { position: 1, createdAt: -1 }; // Default: Custom Order then Latest
     if (sort === 'priceAsc') sortQuery = { price: 1 };
     else if (sort === 'priceDesc') sortQuery = { price: -1 };
-    else if (sort === 'latest') sortQuery = { createdAt: -1 };
+    else if (sort === 'latest') sortQuery = { position: 1, createdAt: -1 };
 
     const products = await Product.find(query)
       .populate('collectionRef', 'name')
@@ -174,10 +174,36 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// @desc    Reorder products
+// @route   PUT /api/products/reorder
+// @access  Private/Admin
+const reorderProducts = async (req, res) => {
+  try {
+    const { orderedIds } = req.body;
+    
+    if (orderedIds && orderedIds.length > 0) {
+      const bulkOps = orderedIds.map((id, index) => ({
+        updateOne: {
+          filter: { _id: id },
+          update: { position: index }
+        }
+      }));
+      
+      await Product.bulkWrite(bulkOps);
+      res.json({ message: 'Products reordered successfully' });
+    } else {
+      res.status(400).json({ message: 'No ordered IDs provided' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   deleteProduct,
   createProduct,
   updateProduct,
+  reorderProducts,
 };

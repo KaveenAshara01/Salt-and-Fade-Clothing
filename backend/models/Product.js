@@ -44,6 +44,11 @@ const productSchema = mongoose.Schema(
       url: { type: String },
       public_id: { type: String },
     },
+    position: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   {
     timestamps: true,

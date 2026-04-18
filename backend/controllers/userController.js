@@ -156,11 +156,11 @@ const forgotPassword = async (req, res) => {
     const html = `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #f0f0f0; padding: 40px; color: #333; line-height: 1.6;">
         <div style="text-align: center; margin-bottom: 30px;">
-           <h2 style="color: #1D4E3A; font-size: 1.6rem; margin-bottom: 15px; letter-spacing: 1px;">PASSWORD RESET</h2>
+           <h2 style="color: #111; font-size: 1.6rem; margin-bottom: 15px; letter-spacing: 1px;">PASSWORD RESET</h2>
            <p style="color: #666; font-size: 1rem; line-height: 1.6;">You are receiving this email because you requested a password reset. Please click on the button below to reset your password:</p>
         </div>
         <div style="text-align: center; margin-bottom: 30px;">
-           <a href="${resetUrl}" style="background-color: #1D4E3A; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Reset Password</a>
+           <a href="${resetUrl}" style="background-color: #111; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Reset Password</a>
         </div>
         <div style="text-align: center; font-size: 0.9rem; color: #444; border-top: 1px solid #eee; padding-top: 30px;">
            <p style="margin-bottom: 10px;">If you did not request this, please ignore this email and your password will remain unchanged.</p>
