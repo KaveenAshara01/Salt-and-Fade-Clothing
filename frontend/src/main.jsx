@@ -32,6 +32,7 @@ import { UserProvider } from './context/UserContext.jsx';
 import CheckoutScreen from './screens/CheckoutScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import AdminOrderListScreen from './screens/admin/AdminOrderListScreen.jsx';
+import PaymentReturnScreen from './screens/PaymentReturnScreen.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,6 +49,7 @@ const router = createBrowserRouter(
       <Route path="/reset-password/:token" element={<ResetPasswordScreen />} />
       <Route path="/about" element={<AboutScreen />} />
       <Route path="/returns" element={<ReturnsPolicyScreen />} />
+      <Route path="/payment/return" element={<PaymentReturnScreen />} />
       
       {/* Admin Routes */}
       <Route path="/admin/productlist" element={<ProductListScreen />} />

@@ -13,6 +13,8 @@ console.log('🚀 Starting Salt & Fade Server...');
 console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 console.log(`📦 DB URI Detected: ${process.env.MONGO_URI ? 'YES' : 'NO (Using Local Default)'}`);
 console.log(`🔐 JWT Secret Detected: ${process.env.JWT_SECRET ? 'YES' : 'NO (Check ENV)'}`);
+console.log(`💳 PAYable MerchantID: ${process.env.PAYABLE_MERCHANT_ID ? 'YES' : 'NO (Check ENV)'}`);
+console.log(`💳 PAYable Token: ${process.env.PAYABLE_MERCHANT_TOKEN ? 'YES' : 'NO (Check ENV)'}`);
 console.log('=======================================\n');
 
 // Middleware
@@ -25,6 +27,7 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Use Routes
 app.use('/api/users', userRoutes);
@@ -32,6 +35,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/collections', collectionRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
