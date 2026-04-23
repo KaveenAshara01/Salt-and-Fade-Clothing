@@ -8,7 +8,7 @@ export default defineConfig({
     allowedHosts: [
       'localhost',
       '127.0.0.1',
-      '581b-2402-d000-8138-dfc7-c9c0-52eb-21a7-89ec.ngrok-free.app'
+      '.ngrok-free.app'  // wildcard: allows any ngrok tunnel URL
     ],
     proxy: {
       '/api': 'http://localhost:5000',

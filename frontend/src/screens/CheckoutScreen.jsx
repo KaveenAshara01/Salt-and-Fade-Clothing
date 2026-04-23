@@ -2,10 +2,50 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { Truck, CreditCard, ChevronRight, CheckCircle, Info, Lock, ArrowLeft } from 'lucide-react';
+import { Truck, CreditCard, Info, Lock, ArrowLeft, CheckCircle } from 'lucide-react';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import LoginModal from '../components/LoginModal';
+
+// ── Direct PAYable API caller (bypasses the npm package so we control refererUrl)
+// The npm package auto-sets refererUrl from window.location.href which is http on localhost
+const launchPayablePayment = async (paymentParams, isTestMode = true) => {
+  const env = isTestMode ? 'sandbox' : 'pro';
+  const baseUrl = isTestMode
+    ? 'https://sandboxipgpayment.payable.lk'  // correct: no dot between sandboxipg and payment
+    : 'https://ipgpayment.payable.lk';
+
+  const body = {
+    ...paymentParams,
+    statusReturnUrl: `${baseUrl}/ipg/${env}/status-view`,
+    integrationType: 'JSDK',
+    integrationVersion: '4.1.4',
+    isSameShippingAddress: '1',
+    billingAddressPostcodeZip: paymentParams.billingAddressPostcodeZip || '0000',
+    // refererUrl already set by backend (FRONTEND_URL env var — must be https in production)
+  };
+
+  const response = await fetch(`${baseUrl}/ipg/${env}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+
+  if (data.paymentPage) {
+    window.location.href = data.paymentPage; // Redirect browser to PAYable hosted page
+    return { success: true };
+  }
+
+  // Return error details for debugging
+  console.error('PAYable initiation failed:', data);
+  const errMsg =
+    data.errors
+      ? Object.values(data.errors).flat().join(' | ')
+      : data.error?.message || 'Payment gateway error. Please try again.';
+  return { success: false, error: errMsg };
+};
 
 const CheckoutScreen = () => {
   const { cartItems, itemsPrice, shippingPrice, totalPrice, clearCart } = useCart();
@@ -24,7 +64,7 @@ const CheckoutScreen = () => {
     address: '',
     city: '',
     postalCode: '',
-    paymentMethod: 'Card Payment', // Success simulation
+    paymentMethod: 'Card Payment',
   });
 
   const [loading, setLoading] = useState(false);
@@ -52,55 +92,103 @@ const CheckoutScreen = () => {
     }));
   };
 
+  // ── COD order handler (unchanged behaviour) ───────────────────────────────
+  const submitCOD = async () => {
+    const config = { headers: { 'Content-Type': 'application/json' } };
+    if (userInfo?.token) config.headers.Authorization = `Bearer ${userInfo.token}`;
+
+    const orderData = {
+      orderItems: cartItems,
+      shippingAddress: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        phoneNumber2: formData.phoneNumber2,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: 'Sri Lanka',
+      },
+      paymentMethod: 'Cash on Delivery',
+      itemsPrice,
+      shippingPrice,
+      taxPrice: 0,
+      totalPrice,
+    };
+
+    const { data } = await axios.post('/api/orders', orderData, config);
+    setCreatedOrder(data);
+    setIsSuccess(true);
+    clearCart();
+    window.scrollTo(0, 0);
+  };
+
+  // ── Card payment handler (PAYable IPG) ────────────────────────────────────
+  const submitCardPayment = async () => {
+    const config = { headers: { 'Content-Type': 'application/json' } };
+    if (userInfo?.token) config.headers.Authorization = `Bearer ${userInfo.token}`;
+
+    const shippingAddress = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      phoneNumber2: formData.phoneNumber2,
+      address: formData.address,
+      city: formData.city,
+      postalCode: formData.postalCode,
+      country: 'Sri Lanka',
+    };
+
+    // Step 1: Call backend to create pending order + get signed payment params
+    const { data } = await axios.post(
+      '/api/payment/initiate',
+      { orderItems: cartItems, shippingAddress, itemsPrice, shippingPrice, totalPrice },
+      config
+    );
+
+    const { orderId, paymentParams } = data;
+
+    // Step 2: Store orderId in sessionStorage so the return page can confirm it
+    sessionStorage.setItem('pendingOrderId', orderId);
+
+    // Step 3: Launch PAYable via direct fetch (bypasses npm package refererUrl issue)
+    const result = await launchPayablePayment(paymentParams, true); // true = sandbox/testMode
+
+    // If payablePayment returns (e.g. error before redirect)
+    if (result && !result.success) {
+      throw new Error(result.error || 'Payment gateway error. Please try again.');
+    }
+
+    // If we reach here the browser should already be redirecting to PAYable
+    // Clear cart now (backend already reserved stock via pending order)
+    clearCart();
+  };
+
+  // ── Unified submit handler ────────────────────────────────────────────────
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-
-      if (userInfo && userInfo.token) {
-        config.headers.Authorization = `Bearer ${userInfo.token}`;
+      if (formData.paymentMethod === 'Cash on Delivery') {
+        await submitCOD();
+      } else {
+        await submitCardPayment();
       }
-
-      const orderData = {
-        orderItems: cartItems,
-        shippingAddress: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phoneNumber: formData.phoneNumber,
-          phoneNumber2: formData.phoneNumber2,
-          address: formData.address,
-          city: formData.city,
-          postalCode: formData.postalCode,
-          country: 'Sri Lanka',
-        },
-        paymentMethod: formData.paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice: 0,
-        totalPrice,
-      };
-
-      const { data } = await axios.post('/api/orders', orderData, config);
-      
-      setCreatedOrder(data);
-      setIsSuccess(true);
-      clearCart();
-      window.scrollTo(0, 0); // Ensure user sees success message from top
     } catch (err) {
-      setError(err.response && err.response.data.message ? err.response.data.message : err.message);
+      setError(
+        err.response?.data?.message || err.message || 'Something went wrong. Please try again.'
+      );
+      window.scrollTo(0, 0);
     } finally {
       setLoading(false);
     }
   };
 
+  // ── COD success screen ────────────────────────────────────────────────────
   if (isSuccess && createdOrder) {
     return (
       <div className="container" style={{ padding: '120px 24px 60px', textAlign: 'center', minHeight: '80vh' }}>
@@ -201,7 +289,7 @@ const CheckoutScreen = () => {
                   <CreditCard size={24} style={{ color: 'var(--color-primary)' }} />
                   <div>
                     <h4 style={{ fontWeight: 600 }}>Credit / Debit Card</h4>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Securely pay with Visa, Mastercard or Amex</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Securely pay via PAYable — Visa, Mastercard, Amex, Diners & Discover</p>
                   </div>
                </label>
                
@@ -228,7 +316,13 @@ const CheckoutScreen = () => {
 
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '20px', fontSize: '1.1rem', gap: '1rem' }}>
             {loading ? <Loader size={20} /> : <Lock size={20} />}
-            {formData.paymentMethod === 'Card Payment' ? 'Pay & Place Order' : 'Confirm Order (COD)'}
+            {loading
+              ? formData.paymentMethod === 'Card Payment'
+                ? 'Preparing Payment...'
+                : 'Placing Order...'
+              : formData.paymentMethod === 'Card Payment'
+              ? 'Pay & Place Order'
+              : 'Confirm Order (COD)'}
           </button>
         </form>
 

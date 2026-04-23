@@ -1,0 +1,181 @@
+
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+D O C U M E N T
+I N F O R M A T I O N
+PROJECTNAME:P A Y a b l eI P G
+DOCUMENTID:P A Y a b l e _ I P G _ S a n d b o x _ T e s t i n g _ D o c u m e n t _ R 1 . 2
+AUTHOR:N a d e e s h y aN u k u l a s o o r i y a
+DOCUMENTVERSION:1 . 2
+LASTREVISEDDATE:2 0 2 3 / 0 3 / 2 4
+1
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+D O C U M E N T
+R E V I S I O N
+H I S T O R Y
+D a t eV e r s i o nN oR e v i s i o nD e s c r i p t i o nR e v i s e dB y2 0 2 1 / 0 8 / 1 61 . 0I n i t i a lD r a f tN a d e e s h y a2 0 2 2 / 1 0 / 1 91 . 13 - DS e c u r eN o tS u p p o r t e dc a r d su p d a t e da n dN o t ei sa d d e dN a d e e s h y a
+2 0 2 3 / 0 3 / 2 41 . 23 - DS e c u r eN o tS u p p o r t e dc a r d sr e m o v e da n d3 DS e c u r ee x p l a n a t i o na d d e dN a d e e s h y a
+2
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+T a b l e
+o f
+C o n t e n t s
+1.INTRODUCTION4
+1 . 1D o c u m e n tP u r p o s e4
+1 . 2I n t e n d e dA u d i e n c e4
+1 . 3A c r o n y m s4
+2.INTEGRATIONTESTINGWITHPAYableIPGSANDBOXENVIRONMENT5
+2 . 1S t a n d a r dT e s tC a r dD e t a i l sw i t hM P G S5
+2 . 23 DS e c u r e( 3 D S )-( O T PV e r i f i c a t i o nP r o c e s s )7
+3
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+1 .
+I N T R O D U C T I O N
+1 . 1
+D o c u m e n t
+P u r p o s e
+T h i sd o c u m e n ti n c l u d e st h et e s tc a r dd e t a i l sf o rt h eP A Y a b l eI P GS a n d b o xT e s t i n g .
+1 . 2
+I n t e n d e d
+A u d i e n c e
+T h ed o c u m e n ti st a r g e t e dt ot h ef o l l o w i n gp e r s o n n e l :
+●T e c h n i c a lS u p p o r to ft h eM e r c h a n t s
+●T e c h n i c a lS p e c i a l i s t s
+●T h i r dP a r t yP l u g i nD e v e l o p e r s
+1 . 3
+A c r o n y m s
+A c r o n y mD e f i n i t i o nI P GI n t e r n e tP a y m e n tG a t e w a yA P IA p p l i c a t i o nP r o g r a m m i n gI n t e r f a c eU R LU n i f o r mR e s o u r c eL o c a t o rM P G SM a s t e r c a r dP a y m e n tG a t e w a yS e r v i c e s
+4
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+2 .
+I N T E G R A T I O N
+T E S T I N G
+W I T H
+P A Y a b l e
+I P G
+S A N D B O X
+E N V I R O N M E N T
+2 . 1
+S t a n d a r d
+T e s t
+C a r d
+D e t a i l s
+w i t h
+M P G S
+NOTE:PAYableIPGdoesn’tsupport3-DSecureNotEnrolledcards(OTPverificationisamustinlive),
+thereforepaymentswhichperformwithVisaandMastercardcardswith3-DSecurenotsupportedcardswill
+berejectedinliveenvironment.
+T e s t
+C a r d s
+C a r d
+N u m b e r
+3 - D
+S e c u r e
+E n r o l l e d
+M a s t e r c a r d
+5 1 2 3 4 5 0 0 0 0 0 0 0 0 0 8
+Y E S
+2 2 2 3 0 0 0 0 0 0 0 0 0 0 0 7
+Y E S
+V i s a
+4 5 0 8 7 5 0 0 1 5 7 4 1 0 1 9
+Y E S
+E x p i r y
+D a t e
+T r a n s a c t i o n
+R e s p o n s e
+G a t e w a y
+C o d e
+0 1 /
+3 9
+A P P R O V E D
+0 5
+/
+3 9
+D E C L I N E D
+0 4
+/
+2 7
+E X P I R E D _ C A R D
+C S C / C V V
+C S C / C V V
+R e s p o n s e
+G a t e w a y
+C o d e
+1 0 0
+M A T C H
+5
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+Whatdoes3DSecuremean?
+F o re x t r af r a u dp r o t e c t i o n ,3 DS e c u r e( 3 D S )r e q u i r e sc u s t o m e r st oc o m p l e t ea na d d i t i o n a lv e r i f i c a t i o ns t e pw i t h
+t h ec a r di s s u e rw h e np a y i n g .T y p i c a l l y ,y o ud i r e c tt h ec u s t o m e rt oa na u t h e n t i c a t i o np a g eo nt h e i rb a n k ' s
+w e b s i t e ,a n dt h e ye n t e rap a s s w o r da s s o c i a t e dw i t ht h ec a r do rac o d es e n tt ot h e i rp h o n e .
+6
+P A Y a b l eI P G-S a n d b o xT e s t i n gD o c u m e n tv 1 . 2
+2 . 2
+3 D
+S e c u r e
+( 3 D S )
+-
+( O T P
+V e r i f i c a t i o n
+P r o c e s s )
+3 D
+S e c u r e
+s h o u l d
+b e
+w o r k i n g
+o n l y
+f o r
+3 D S
+e n a b l e d
+C r e d i t
+C a r d s .
+M a s t e r C a r d
+a n d
+t h e
+C a r d
+I s s u i n g
+B a n k
+w i l l
+h a n d l e
+t h e
+3 D
+S e c u r e
+p r o c e s s
+i n
+t h e
+L i v e
+e n v i r o n m e n t .
+D u r i n g
+t h e
+t e s t i n g ,
+y o u
+c a n
+u s e
+t h e
+A C S
+E m u l a t o r
+t o
+t e s t
+d i f f e r e n t
+3 D S
+s c e n a r i o s .
+K e e p
+a l l
+p a r a m e t e r s
+e m p t y
+a n d
+s e l e c t
+d i f f e r e n t
+‘ A u t h e n t i c a t i o n
+R e s u l t s ’
+t o
+c h e c k
+i f
+a l l
+p a t h s
+a r e
+h a n d l e d
+s u c c e s s f u l l y .
+7
+
