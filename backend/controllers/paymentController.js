@@ -93,8 +93,8 @@ const initiatePayment = async (req, res) => {
     // 3. Generate sequential order number & invoiceId (PAYable max = 20 chars)
     const orderCount = await Order.countDocuments();
     const orderNumber = (orderCount + 1).toString().padStart(4, '0');
-    // e.g. "INV0001A3F8C2" — always ≤ 20 chars
-    const invoiceId = `INV${orderNumber}${Date.now().toString(36).toUpperCase()}`.slice(0, 20);
+    // Use timestamp for uniqueness, e.g. "INV1714454045000" (16 chars)
+    const invoiceId = `INV${Date.now()}`;
 
     // 4. Create PENDING order in DB (isPaid = false, status = 'Pending Payment')
     const order = new Order({
@@ -113,17 +113,8 @@ const initiatePayment = async (req, res) => {
 
     const createdOrder = await order.save();
 
-    // 5. Reduce stock immediately to prevent double-inventory (same as COD flow)
-    for (const item of orderItems) {
-      const product = await Product.findById(item.product);
-      if (product) {
-        product.countInStock[item.size] = Math.max(
-          0,
-          product.countInStock[item.size] - item.qty
-        );
-        await product.save();
-      }
-    }
+    // Removed immediate stock reduction here per user request. 
+    // Stock will be reduced only after successful payment confirmation.
 
     // 6. Build PAYable payment params
     const amount = formatAmount(totalPrice);
@@ -176,8 +167,8 @@ const confirmPayment = async (req, res) => {
   try {
     const { orderId, invoiceId, status, transactionId } = req.body;
 
-    // PAYable status 2 = approved/success
-    if (String(status) !== '2') {
+    // PAYable status 1 = approved/success
+    if (String(status) !== '1') {
       // Payment failed or was cancelled — mark status accordingly
       await Order.findByIdAndUpdate(orderId, {
         status: 'Payment Failed',
@@ -207,6 +198,18 @@ const confirmPayment = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    // Reduce stock ONLY upon successful payment
+    for (const item of order.orderItems) {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.countInStock[item.size] = Math.max(
+          0,
+          product.countInStock[item.size] - item.qty
+        );
+        await product.save();
+      }
     }
 
     // Clear user cart if logged in

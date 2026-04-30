@@ -7,9 +7,9 @@ import { useCart } from '../context/CartContext';
 import Loader from '../components/Loader';
 
 // PAYable status codes
-// 0 = Failed / Cancelled
-// 1 = Pending
-// 2 = Success / Approved
+// 1 = Success
+// 2 = Failed
+// (Note: Previous dev confused this with PayHere where 2=Success)
 
 const PaymentReturnScreen = () => {
   const [searchParams] = useSearchParams();
@@ -24,8 +24,8 @@ const PaymentReturnScreen = () => {
     const processReturn = async () => {
       try {
         // Read PAYable redirect params from URL
-        const status = searchParams.get('status');
-        const invoiceId = searchParams.get('invoiceId') || searchParams.get('invoice_id');
+        const status = searchParams.get('status') || searchParams.get('statusCode');
+        const invoiceId = searchParams.get('invoiceId') || searchParams.get('invoice_id') || searchParams.get('invoiceNo');
         const transactionId = searchParams.get('transactionId') || searchParams.get('transaction_id') || searchParams.get('paymentId');
 
         // Get the pending order ID we stored before the redirect
@@ -48,9 +48,9 @@ const PaymentReturnScreen = () => {
 
         // Clean up
         sessionStorage.removeItem('pendingOrderId');
-        clearCart();
 
         if (data.success) {
+          clearCart();
           setOrder(data.order);
           setPageState('success');
         } else {
