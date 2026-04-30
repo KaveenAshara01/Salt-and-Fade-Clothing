@@ -162,8 +162,7 @@ const CheckoutScreen = () => {
     }
 
     // If we reach here the browser should already be redirecting to PAYable
-    // Clear cart now (backend already reserved stock via pending order)
-    clearCart();
+    // Cart will be cleared on the return page upon successful payment confirmation.
   };
 
   // ── Unified submit handler ────────────────────────────────────────────────
