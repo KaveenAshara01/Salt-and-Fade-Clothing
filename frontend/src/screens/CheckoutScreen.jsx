@@ -161,7 +161,9 @@ const CheckoutScreen = () => {
     sessionStorage.setItem('pendingOrderId', orderId);
 
     // Step 3: Launch PAYable via direct fetch (bypasses npm package refererUrl issue)
-    const result = await launchPayablePayment(paymentParams, true); // true = sandbox/testMode
+    // Check if we are in test mode from Vite env, default to false (production) if not set
+    const isTestMode = import.meta.env.VITE_PAYABLE_ENV === 'sandbox';
+    const result = await launchPayablePayment(paymentParams, isTestMode);
 
     // If payablePayment returns (e.g. error before redirect)
     if (result && !result.success) {
