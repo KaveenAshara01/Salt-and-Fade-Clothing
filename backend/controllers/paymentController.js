@@ -109,6 +109,9 @@ const initiatePayment = async (req, res) => {
       totalPrice,
       isPaid: false,
       status: 'Pending Payment',
+      paymentResult: {
+        id: invoiceId, // Store invoiceId here temporarily so webhook can find it!
+      }
     });
 
     const createdOrder = await order.save();
@@ -123,13 +126,14 @@ const initiatePayment = async (req, res) => {
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const returnUrl = `${frontendUrl}/payment/return`;
+    // The webhook URL where PAYable will POST the secure status
+    const notifyUrl = `${process.env.BACKEND_URL || frontendUrl}/api/payment/notify`;
 
     const paymentParams = {
       logoUrl:
         'https://ipgpublic-mer-logo.s3.ap-southeast-1.amazonaws.com/live/Salt_and_Fade_Clothing_916385a5-c084-472b-b8f1-56fe744ae379.png',
       returnUrl,
-      // refererUrl must also be https — we pass frontendUrl so it can be overridden
-      // by the direct fetch helper on the frontend (bypasses the npm package auto-detect)
+      notifyUrl,
       refererUrl: frontendUrl,
       checkValue,
       // PAYable does not allow & or # in orderDescription
@@ -160,78 +164,118 @@ const initiatePayment = async (req, res) => {
   }
 };
 
-// @desc    Confirm card payment after PAYable redirect (called by frontend return page)
+// @desc    Check order status from DB (frontend polls this on return page)
 // @route   POST /api/payment/confirm
 // @access  Public
 const confirmPayment = async (req, res) => {
   try {
-    const { orderId, invoiceId, status, transactionId, rawUrlParams } = req.body;
-
-    // Log the exact payload received from frontend for debugging
-    require('fs').appendFileSync('payable-debug.log', JSON.stringify({ timestamp: new Date(), body: req.body }) + '\\n');
-
-    // PAYable might return different values for success. Let's loosen the check.
-    // Accept '1', '2' (in case old versions use it), '00', 'SUCCESS', 'APPROVED'
-    const statusStr = String(status).toUpperCase();
-    const isSuccess = statusStr === '1' || statusStr === '2' || statusStr === '00' || statusStr === 'SUCCESS' || statusStr === 'APPROVED';
-
-    if (!isSuccess) {
-      // Payment failed or was cancelled — mark status accordingly
-      await Order.findByIdAndUpdate(orderId, {
-        status: 'Payment Failed',
-        'paymentResult.status': String(status),
-        'paymentResult.id': transactionId || '',
-        'paymentResult.update_time': new Date().toISOString(),
-      });
-      return res.status(200).json({ success: false, message: 'Payment was not successful.' });
-    }
-
-    // Mark order as paid
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      {
-        isPaid: true,
-        paidAt: Date.now(),
-        status: 'Processing',
-        paymentResult: {
-          id: transactionId || invoiceId,
-          status: 'APPROVED',
-          update_time: new Date().toISOString(),
-          email_address: '',
-        },
-      },
-      { new: true }
-    );
-
+    const { orderId } = req.body;
+    const order = await Order.findById(orderId);
+    
     if (!order) {
       return res.status(404).json({ message: 'Order not found.' });
     }
 
-    // Reduce stock ONLY upon successful payment
-    for (const item of order.orderItems) {
-      const product = await Product.findById(item.product);
-      if (product) {
-        product.countInStock[item.size] = Math.max(
-          0,
-          product.countInStock[item.size] - item.qty
-        );
-        await product.save();
-      }
+    if (order.isPaid) {
+      return res.status(200).json({ success: true, order });
+    } else if (order.status === 'Payment Failed') {
+      return res.status(200).json({ success: false, message: 'Payment failed.', order });
+    } else {
+      // Still pending webhook
+      return res.status(200).json({ success: 'pending', order });
     }
-
-    // Clear user cart if logged in
-    if (order.user) {
-      const user = await User.findById(order.user);
-      if (user) {
-        user.cart = [];
-        await user.save();
-      }
-    }
-
-    res.status(200).json({ success: true, order });
   } catch (error) {
     console.error('confirmPayment error:', error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Handle server-to-server webhook from PAYable
+// @route   POST /api/payment/notify
+// @access  Public
+const handleNotify = async (req, res) => {
+  try {
+    const {
+      merchantKey,
+      payableOrderId,
+      payableTransactionId,
+      payableAmount,
+      payableCurrency,
+      invoiceNo,
+      statusCode,
+      statusMessage,
+      checkValue,
+    } = req.body;
+
+    require('fs').appendFileSync('payable-webhook.log', JSON.stringify({ timestamp: new Date(), body: req.body }) + '\\n');
+
+    // 1. Verify Hash
+    const hashedToken = crypto.createHash('sha512').update(MERCHANT_TOKEN).digest('hex').toUpperCase();
+    const dataString = `${merchantKey}|${payableOrderId}|${payableTransactionId}|${payableAmount}|${payableCurrency}|${invoiceNo}|${statusCode}|${hashedToken}`;
+    const generatedCheckValue = crypto.createHash('sha512').update(dataString).digest('hex').toUpperCase();
+
+    if (generatedCheckValue !== checkValue) {
+      console.error('PAYable Webhook CheckValue Mismatch!');
+      return res.status(400).json({ error: 'Invalid hash' });
+    }
+
+    // 2. Find Order by invoiceId (we saved invoiceId in order creation, wait we didn't save it to DB! Let's find by orderNumber or just ID? Oh we didn't save invoiceId to DB! Wait!)
+    // Actually, we generated invoiceNo as `INV${Date.now()}` but we didn't save it. We only returned it to frontend.
+    // Let's modify initiatePayment to save invoiceId to `paymentResult.id` so we can find it!
+    // Or we can extract the original order. Wait! 
+    const order = await Order.findOne({ 'paymentResult.id': invoiceNo });
+    
+    if (!order) {
+       // fallback: find by invoiceNo string matching if needed, or if we modify initiatePayment below.
+       // Let's just respond 200 so PAYable stops retrying if order not found.
+       return res.status(200).json({ Status: 200 });
+    }
+
+    if (order.isPaid) {
+      return res.status(200).json({ Status: 200 });
+    }
+
+    if (String(statusCode) === '1') {
+      order.isPaid = true;
+      order.paidAt = Date.now();
+      order.status = 'Processing';
+      order.paymentResult = {
+        id: payableTransactionId,
+        status: 'APPROVED',
+        update_time: new Date().toISOString(),
+        email_address: '',
+      };
+
+      // Reduce stock ONLY upon successful payment
+      for (const item of order.orderItems) {
+        const product = await Product.findById(item.product);
+        if (product) {
+          product.countInStock[item.size] = Math.max(
+            0,
+            product.countInStock[item.size] - item.qty
+          );
+          await product.save();
+        }
+      }
+
+      // Clear user cart if logged in
+      if (order.user) {
+        const user = await User.findById(order.user);
+        if (user) {
+          user.cart = [];
+          await user.save();
+        }
+      }
+    } else {
+      order.status = 'Payment Failed';
+    }
+
+    await order.save();
+    return res.status(200).json({ Status: 200 });
+
+  } catch (error) {
+    console.error('PAYable Webhook Error:', error);
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -248,4 +292,4 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { initiatePayment, confirmPayment, getOrderById };
+module.exports = { initiatePayment, confirmPayment, getOrderById, handleNotify };
