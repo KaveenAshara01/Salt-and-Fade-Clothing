@@ -38,12 +38,16 @@ const PaymentReturnScreen = () => {
           return;
         }
 
+        // Get all raw params for debugging
+        const rawUrlParams = Object.fromEntries([...searchParams.entries()]);
+
         // Confirm with backend (this marks the order paid/failed and returns the saved order)
         const { data } = await axios.post('/api/payment/confirm', {
           orderId,
           invoiceId,
           status,
           transactionId,
+          rawUrlParams,
         });
 
         // Clean up

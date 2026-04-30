@@ -165,10 +165,17 @@ const initiatePayment = async (req, res) => {
 // @access  Public
 const confirmPayment = async (req, res) => {
   try {
-    const { orderId, invoiceId, status, transactionId } = req.body;
+    const { orderId, invoiceId, status, transactionId, rawUrlParams } = req.body;
 
-    // PAYable status 1 = approved/success
-    if (String(status) !== '1') {
+    // Log the exact payload received from frontend for debugging
+    require('fs').appendFileSync('payable-debug.log', JSON.stringify({ timestamp: new Date(), body: req.body }) + '\\n');
+
+    // PAYable might return different values for success. Let's loosen the check.
+    // Accept '1', '2' (in case old versions use it), '00', 'SUCCESS', 'APPROVED'
+    const statusStr = String(status).toUpperCase();
+    const isSuccess = statusStr === '1' || statusStr === '2' || statusStr === '00' || statusStr === 'SUCCESS' || statusStr === 'APPROVED';
+
+    if (!isSuccess) {
       // Payment failed or was cancelled — mark status accordingly
       await Order.findByIdAndUpdate(orderId, {
         status: 'Payment Failed',
