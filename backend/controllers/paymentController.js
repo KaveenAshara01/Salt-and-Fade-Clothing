@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const Order = require('../models/Order.js');
 const Product = require('../models/Product.js');
 const User = require('../models/User.js');
+const { sendOrderEmail } = require('./orderController.js');
 const jwt = require('jsonwebtoken');
 
 const MERCHANT_KEY = process.env.PAYABLE_MERCHANT_ID;
@@ -266,6 +267,10 @@ const handleNotify = async (req, res) => {
           await user.save();
         }
       }
+
+      // Send Order Placed Emails
+      sendOrderEmail(order, 'buyer');
+      sendOrderEmail(order, 'admin');
     } else {
       order.status = 'Payment Failed';
     }
