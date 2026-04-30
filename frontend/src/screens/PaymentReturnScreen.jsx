@@ -37,29 +37,34 @@ const PaymentReturnScreen = () => {
           setError('We could not find your order. If payment was taken, please contact support.');
           return;
         }
+        let attempts = 0;
+        let isConfirmed = false;
 
-        // Get all raw params for debugging
-        const rawUrlParams = Object.fromEntries([...searchParams.entries()]);
+        while (attempts < 10 && !isConfirmed) {
+          const { data } = await axios.post('/api/payment/confirm', { orderId });
+          
+          if (data.success === true) {
+            sessionStorage.removeItem('pendingOrderId');
+            clearCart();
+            setOrder(data.order);
+            setPageState('success');
+            isConfirmed = true;
+          } else if (data.success === false) {
+            sessionStorage.removeItem('pendingOrderId');
+            setPageState('failed');
+            setError(data.message || 'Your payment was not completed.');
+            isConfirmed = true;
+          } else {
+            // success is 'pending', wait 2 seconds and check again
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            attempts++;
+          }
+        }
 
-        // Confirm with backend (this marks the order paid/failed and returns the saved order)
-        const { data } = await axios.post('/api/payment/confirm', {
-          orderId,
-          invoiceId,
-          status,
-          transactionId,
-          rawUrlParams,
-        });
-
-        // Clean up
-        sessionStorage.removeItem('pendingOrderId');
-
-        if (data.success) {
-          clearCart();
-          setOrder(data.order);
-          setPageState('success');
-        } else {
-          setPageState('failed');
-          setError('Your payment was not completed. No charges were made.');
+        if (!isConfirmed) {
+           sessionStorage.removeItem('pendingOrderId');
+           setPageState('failed');
+           setError('Payment is taking longer than expected to confirm. Please check your profile or email for the receipt later.');
         }
 
         window.scrollTo(0, 0);
