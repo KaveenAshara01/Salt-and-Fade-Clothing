@@ -25,6 +25,13 @@ const launchPayablePayment = async (paymentParams, isTestMode = true) => {
     // refererUrl already set by backend (FRONTEND_URL env var — must be https in production)
   };
 
+  if (body.notifyUrl) {
+    body.webhookUrl = body.notifyUrl;
+    delete body.notifyUrl;
+  } else {
+    body.webhookUrl = '';
+  }
+
   const response = await fetch(`${baseUrl}/ipg/${env}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
