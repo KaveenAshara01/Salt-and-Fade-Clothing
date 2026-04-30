@@ -315,6 +315,8 @@ const updateOrderStatus = async (req, res) => {
 
     if (order) {
       const oldTracking = order.trackingId;
+      const oldStatus = order.status;
+      
       order.status = req.body.status || order.status;
       order.trackingId = req.body.trackingId || order.trackingId;
 
@@ -325,8 +327,11 @@ const updateOrderStatus = async (req, res) => {
 
       const updatedOrder = await order.save();
 
-      // Trigger email ONLY if trackingId was added/changed now
-      if (req.body.trackingId && req.body.trackingId !== oldTracking) {
+      // Trigger email if trackingId was added/changed OR status changed to 'Shipped'
+      const trackingChanged = req.body.trackingId && req.body.trackingId !== oldTracking;
+      const statusChangedToShipped = req.body.status === 'Shipped' && oldStatus !== 'Shipped';
+
+      if (trackingChanged || statusChangedToShipped) {
          sendShippingEmail(updatedOrder);
       }
 
@@ -383,4 +388,5 @@ module.exports = {
   getOrders,
   updateOrderStatus,
   validateCart,
+  sendOrderEmail,
 };
