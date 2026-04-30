@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { Truck, CreditCard, Info, Lock, ArrowLeft, CheckCircle } from 'lucide-react';
+import { CreditCard, Info, Lock, ArrowLeft } from 'lucide-react';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import LoginModal from '../components/LoginModal';
@@ -76,14 +76,12 @@ const CheckoutScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [createdOrder, setCreatedOrder] = useState(null);
 
   useEffect(() => {
-    if (cartItems.length === 0 && !isSuccess) {
+    if (cartItems.length === 0) {
       navigate('/cart');
     }
-  }, [cartItems, navigate, isSuccess]);
+  }, [cartItems, navigate]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -97,38 +95,6 @@ const CheckoutScreen = () => {
       lastName: data.name.split(' ')[1] || prev.lastName,
       email: data.email || prev.email,
     }));
-  };
-
-  // ── COD order handler (unchanged behaviour) ───────────────────────────────
-  const submitCOD = async () => {
-    const config = { headers: { 'Content-Type': 'application/json' } };
-    if (userInfo?.token) config.headers.Authorization = `Bearer ${userInfo.token}`;
-
-    const orderData = {
-      orderItems: cartItems,
-      shippingAddress: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        phoneNumber2: formData.phoneNumber2,
-        address: formData.address,
-        city: formData.city,
-        postalCode: formData.postalCode,
-        country: 'Sri Lanka',
-      },
-      paymentMethod: 'Cash on Delivery',
-      itemsPrice,
-      shippingPrice,
-      taxPrice: 0,
-      totalPrice,
-    };
-
-    const { data } = await axios.post('/api/orders', orderData, config);
-    setCreatedOrder(data);
-    setIsSuccess(true);
-    clearCart();
-    window.scrollTo(0, 0);
   };
 
   // ── Card payment handler (PAYable IPG) ────────────────────────────────────
@@ -181,11 +147,7 @@ const CheckoutScreen = () => {
     setError(null);
 
     try {
-      if (formData.paymentMethod === 'Cash on Delivery') {
-        await submitCOD();
-      } else {
-        await submitCardPayment();
-      }
+      await submitCardPayment();
     } catch (err) {
       setError(
         err.response?.data?.message || err.message || 'Something went wrong. Please try again.'
@@ -195,26 +157,6 @@ const CheckoutScreen = () => {
       setLoading(false);
     }
   };
-
-  // ── COD success screen ────────────────────────────────────────────────────
-  if (isSuccess && createdOrder) {
-    return (
-      <div className="container" style={{ padding: '120px 24px 60px', textAlign: 'center', minHeight: '80vh' }}>
-        <div style={{ maxWidth: '600px', margin: 'auto', backgroundColor: 'var(--color-bg)', padding: '4rem', borderRadius: 'var(--radius-lg)' }}>
-           <CheckCircle size={80} color="var(--color-primary)" style={{ marginBottom: '2rem' }} />
-           <h1 className="title-medium" style={{ marginBottom: '1rem' }}>Order Placed Successfully!</h1>
-           <p style={{ fontSize: '1.2rem', color: 'var(--color-text-light)', marginBottom: '2rem' }}>
-             Your order number is <strong style={{ color: 'var(--color-primary)' }}>#{createdOrder.orderNumber}</strong>.
-           </p>
-           <p style={{ marginBottom: '2.5rem' }}>We've sent a confirmation email to {formData.email}.</p>
-           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-              <Link to="/" className="btn btn-primary">Continue Shopping</Link>
-              {userInfo && <Link to="/profile" className="btn btn-outline">View My Orders</Link>}
-           </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container" style={{ padding: 'max(90px, 120px) var(--container-padding) 60px', minHeight: '80vh' }}>
@@ -285,38 +227,19 @@ const CheckoutScreen = () => {
                <label style={{ 
                  padding: '1.5rem', 
                  borderRadius: 'var(--radius-sm)', 
-                 border: `2px solid ${formData.paymentMethod === 'Card Payment' ? 'var(--color-primary)' : 'var(--color-border)'}`, 
+                 border: `2px solid var(--color-primary)`, 
                  display: 'flex', 
                  alignItems: 'center', 
                  gap: '1rem', 
                  cursor: 'pointer',
-                 backgroundColor: formData.paymentMethod === 'Card Payment' ? '#fdfdfd' : 'transparent',
+                 backgroundColor: '#fdfdfd',
                  transition: 'all 0.2s'
                }}>
-                  <input type="radio" name="paymentMethod" value="Card Payment" checked={formData.paymentMethod === 'Card Payment'} onChange={handleInputChange} style={{ width: '18px', height: '18px' }} />
+                  <input type="radio" name="paymentMethod" value="Card Payment" checked={true} readOnly style={{ width: '18px', height: '18px' }} />
                   <CreditCard size={24} style={{ color: 'var(--color-primary)' }} />
                   <div>
                     <h4 style={{ fontWeight: 600 }}>Credit / Debit Card</h4>
                     <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Securely pay via PAYable — Visa, Mastercard, Amex, Diners & Discover</p>
-                  </div>
-               </label>
-               
-               <label style={{ 
-                 padding: '1.5rem', 
-                 borderRadius: 'var(--radius-sm)', 
-                 border: `2px solid ${formData.paymentMethod === 'Cash on Delivery' ? 'var(--color-primary)' : 'var(--color-border)'}`, 
-                 display: 'flex', 
-                 alignItems: 'center', 
-                 gap: '1rem', 
-                 cursor: 'pointer',
-                 backgroundColor: formData.paymentMethod === 'Cash on Delivery' ? '#fdfdfd' : 'transparent',
-                 transition: 'all 0.2s'
-               }}>
-                  <input type="radio" name="paymentMethod" value="Cash on Delivery" checked={formData.paymentMethod === 'Cash on Delivery'} onChange={handleInputChange} style={{ width: '18px', height: '18px' }} />
-                  <Truck size={24} style={{ color: 'var(--color-primary)' }} />
-                  <div>
-                    <h4 style={{ fontWeight: 600 }}>Cash on Delivery (COD)</h4>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Pay only when you receive the package</p>
                   </div>
                </label>
             </div>
@@ -324,13 +247,7 @@ const CheckoutScreen = () => {
 
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '20px', fontSize: '1.1rem', gap: '1rem' }}>
             {loading ? <Loader size={20} /> : <Lock size={20} />}
-            {loading
-              ? formData.paymentMethod === 'Card Payment'
-                ? 'Preparing Payment...'
-                : 'Placing Order...'
-              : formData.paymentMethod === 'Card Payment'
-              ? 'Pay & Place Order'
-              : 'Confirm Order (COD)'}
+            {loading ? 'Preparing Payment...' : 'Pay & Place Order'}
           </button>
         </form>
 
