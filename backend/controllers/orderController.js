@@ -94,12 +94,24 @@ const sendOrderEmail = async (order, type = 'buyer') => {
            </div>
         </div>
         
+        ${isBuyer ? `
         <div style="margin-top: 40px; padding: 25px; border: 1px dashed #ddd; border-radius: 8px;">
            <h4 style="margin: 0 0 10px; font-size: 14px; text-transform: uppercase; color: #999;">Shipping Address</h4>
            <p style="margin: 0; font-weight: 600;">${order.shippingAddress.firstName} ${order.shippingAddress.lastName}</p>
            <p style="margin: 5px 0;">${order.shippingAddress.address}, ${order.shippingAddress.city}</p>
            <p style="margin: 5px 0; font-size: 13px; color: #777;">Payment: ${order.paymentMethod}</p>
         </div>
+        ` : `
+        <div style="margin-top: 40px; padding: 25px; border: 1px dashed #ddd; border-radius: 8px;">
+           <h4 style="margin: 0 0 10px; font-size: 14px; text-transform: uppercase; color: #999;">Customer & Shipping Details</h4>
+           <p style="margin: 0; font-weight: 600;">${order.shippingAddress.firstName} ${order.shippingAddress.lastName}</p>
+           <p style="margin: 5px 0;">Email: ${order.shippingAddress.email}</p>
+           <p style="margin: 5px 0;">Phone: ${order.shippingAddress.phoneNumber}</p>
+           ${order.shippingAddress.phoneNumber2 ? `<p style="margin: 5px 0;">Alt Phone: ${order.shippingAddress.phoneNumber2}</p>` : ''}
+           <p style="margin: 5px 0;">Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}</p>
+           <p style="margin: 5px 0; font-size: 13px; color: #777;">Payment: ${order.paymentMethod}</p>
+        </div>
+        `}
         
         ${isBuyer
         ? `<div style="margin-top: 40px; text-align: center; font-size: 0.9rem; color: #444; border-top: 1px solid #eee; padding-top: 30px;">
