@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from './UserContext';
+import ReactPixel from 'react-facebook-pixel';
 
 const CartContext = createContext();
 
@@ -159,6 +160,16 @@ export const CartProvider = ({ children }) => {
     } else {
       setCartItems([...cartItems, item]);
     }
+    
+    // Track AddToCart event
+    ReactPixel.track('AddToCart', {
+      content_ids: [product._id],
+      content_name: product.name,
+      content_type: 'product',
+      currency: 'LKR',
+      value: product.price * qty
+    });
+
     setIsCartOpen(true);
   };
 

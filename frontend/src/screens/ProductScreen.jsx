@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ShoppingCart, ArrowLeft, Check, ShieldCheck, Truck, AlertTriangle, X, Ruler } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import ReactPixel from 'react-facebook-pixel';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -29,6 +30,16 @@ const ProductScreen = () => {
         if (data.images && data.images.length > 0) {
           setMainImage(data.images[0].url);
         }
+        
+        // Track ViewContent event
+        ReactPixel.track('ViewContent', {
+          content_ids: [data._id],
+          content_name: data.name,
+          content_type: 'product',
+          currency: 'LKR',
+          value: data.price
+        });
+        
         setLoading(false);
       } catch (err) {
         setError(err.response && err.response.data.message ? err.response.data.message : err.message);

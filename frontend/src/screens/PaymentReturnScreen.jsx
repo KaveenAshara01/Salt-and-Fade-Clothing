@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import { useCart } from '../context/CartContext';
 import Loader from '../components/Loader';
+import ReactPixel from 'react-facebook-pixel';
 
 // PAYable status codes
 // 1 = Success
@@ -47,6 +48,15 @@ const PaymentReturnScreen = () => {
             sessionStorage.removeItem('pendingOrderId');
             clearCart();
             setOrder(data.order);
+            
+            // Track Purchase event
+            ReactPixel.track('Purchase', {
+              value: data.order.totalPrice,
+              currency: 'LKR',
+              content_ids: data.order.orderItems.map(item => item.product),
+              num_items: data.order.orderItems.reduce((acc, item) => acc + item.qty, 0)
+            });
+            
             setPageState('success');
             isConfirmed = true;
           } else if (data.success === false) {
