@@ -6,6 +6,7 @@ import { CreditCard, Info, Lock, ArrowLeft } from 'lucide-react';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import LoginModal from '../components/LoginModal';
+import ReactPixel from 'react-facebook-pixel';
 
 // ── Direct PAYable API caller (bypasses the npm package so we control refererUrl)
 // The npm package auto-sets refererUrl from window.location.href which is http on localhost
@@ -80,8 +81,16 @@ const CheckoutScreen = () => {
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate('/cart');
+    } else {
+      // Track InitiateCheckout event
+      ReactPixel.track('InitiateCheckout', {
+        value: totalPrice,
+        currency: 'LKR',
+        content_ids: cartItems.map(item => item.product),
+        num_items: cartItems.reduce((acc, item) => acc + item.qty, 0)
+      });
     }
-  }, [cartItems, navigate]);
+  }, [cartItems, navigate, totalPrice]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

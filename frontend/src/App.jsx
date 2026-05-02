@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import CartModal from './components/CartModal';
 import ScrollToTop from './components/ScrollToTop';
 import Loader from './components/Loader';
+import MetaPixelTracker from './components/MetaPixelTracker';
 
 const App = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -24,6 +25,7 @@ const App = () => {
 
   return (
     <>
+      <MetaPixelTracker />
       <ScrollToTop />
       <Header />
       <CartModal />
