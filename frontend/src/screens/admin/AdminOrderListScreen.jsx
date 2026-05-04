@@ -114,6 +114,7 @@ const AdminOrderListScreen = () => {
                 <th style={{ padding: '1.5rem' }}>Customer</th>
                 <th style={{ padding: '1.5rem' }}>Date</th>
                 <th style={{ padding: '1.5rem' }}>Total</th>
+                <th style={{ padding: '1.5rem' }}>Payment</th>
                 <th style={{ padding: '1.5rem' }}>Status</th>
                 <th style={{ padding: '1.5rem' }}>Actions</th>
               </tr>
@@ -132,6 +133,19 @@ const AdminOrderListScreen = () => {
                   </td>
                   <td data-label="Date" style={{ padding: '1.5rem' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td data-label="Total" style={{ padding: '1.5rem', fontWeight: 600 }}>Rs. {order.totalPrice.toLocaleString()}</td>
+                  <td data-label="Payment" style={{ padding: '1.5rem' }}>
+                    <span style={{ 
+                      padding: '4px 10px', 
+                      borderRadius: '4px', 
+                      backgroundColor: order.paymentMethod === 'Cash on Delivery' ? '#FEF3C7' : '#E0E7FF', 
+                      color: order.paymentMethod === 'Cash on Delivery' ? '#92400E' : '#3730A3',
+                      fontWeight: 600,
+                      fontSize: '0.75rem',
+                      textTransform: 'uppercase'
+                    }}>
+                      {order.paymentMethod === 'Cash on Delivery' ? 'COD' : 'Online'}
+                    </span>
+                  </td>
                   <td data-label="Status" style={{ padding: '1.5rem' }}>
                     <span style={{ 
                       padding: '4px 12px', 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { CreditCard, Info, Lock, ArrowLeft } from 'lucide-react';
+import { CreditCard, Info, Lock, ArrowLeft, Banknote, CheckCircle } from 'lucide-react';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import LoginModal from '../components/LoginModal';
@@ -74,6 +74,8 @@ const CheckoutScreen = () => {
     postalCode: '',
     paymentMethod: 'Card Payment',
   });
+
+  const [showCODModal, setShowCODModal] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -149,6 +151,36 @@ const CheckoutScreen = () => {
     // Cart will be cleared on the return page upon successful payment confirmation.
   };
 
+  const submitCODPayment = async () => {
+    const config = { headers: { 'Content-Type': 'application/json' } };
+    if (userInfo?.token) config.headers.Authorization = `Bearer ${userInfo.token}`;
+
+    const orderData = {
+      orderItems: cartItems,
+      shippingAddress: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        phoneNumber2: formData.phoneNumber2,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: 'Sri Lanka',
+      },
+      paymentMethod: 'Cash on Delivery',
+      itemsPrice,
+      shippingPrice,
+      totalPrice,
+    };
+
+    const { data } = await axios.post('/api/orders', orderData, config);
+    
+    // Clear cart and navigate
+    clearCart();
+    navigate(`/payment/return?orderId=${data._id}&status=success&method=cod`);
+  };
+
   // ── Unified submit handler ────────────────────────────────────────────────
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -156,13 +188,31 @@ const CheckoutScreen = () => {
     setError(null);
 
     try {
-      await submitCardPayment();
+      if (formData.paymentMethod === 'Card Payment') {
+        await submitCardPayment();
+      } else {
+        setShowCODModal(true);
+        setLoading(false); // Stop loading while modal is open
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || err.message || 'Something went wrong. Please try again.'
       );
       window.scrollTo(0, 0);
-    } finally {
+      setLoading(false);
+    }
+  };
+
+  const confirmCODOrder = async () => {
+    setLoading(true);
+    setShowCODModal(false);
+    try {
+      await submitCODPayment();
+    } catch (err) {
+      setError(
+        err.response?.data?.message || err.message || 'Something went wrong. Please try again.'
+      );
+      window.scrollTo(0, 0);
       setLoading(false);
     }
   };
@@ -233,22 +283,55 @@ const CheckoutScreen = () => {
           <section>
             <h2 className="title-small" style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>2. Payment Method</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-               <label style={{ 
+                <label style={{ 
                  padding: '1.5rem', 
                  borderRadius: 'var(--radius-sm)', 
-                 border: `2px solid var(--color-primary)`, 
+                 border: `2px solid ${formData.paymentMethod === 'Card Payment' ? 'var(--color-primary)' : 'var(--color-border)'}`, 
                  display: 'flex', 
                  alignItems: 'center', 
                  gap: '1rem', 
                  cursor: 'pointer',
-                 backgroundColor: '#fdfdfd',
+                 backgroundColor: formData.paymentMethod === 'Card Payment' ? '#fdfdfd' : 'transparent',
                  transition: 'all 0.2s'
                }}>
-                  <input type="radio" name="paymentMethod" value="Card Payment" checked={true} readOnly style={{ width: '18px', height: '18px' }} />
-                  <CreditCard size={24} style={{ color: 'var(--color-primary)' }} />
+                  <input 
+                    type="radio" 
+                    name="paymentMethod" 
+                    value="Card Payment" 
+                    checked={formData.paymentMethod === 'Card Payment'} 
+                    onChange={handleInputChange}
+                    style={{ width: '18px', height: '18px' }} 
+                  />
+                  <CreditCard size={24} style={{ color: formData.paymentMethod === 'Card Payment' ? 'var(--color-primary)' : 'var(--color-text-light)' }} />
                   <div>
                     <h4 style={{ fontWeight: 600 }}>Credit / Debit Card</h4>
                     <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Securely pay via PAYable — Visa, Mastercard, Amex, Diners & Discover</p>
+                  </div>
+               </label>
+
+               <label style={{ 
+                 padding: '1.5rem', 
+                 borderRadius: 'var(--radius-sm)', 
+                 border: `2px solid ${formData.paymentMethod === 'Cash on Delivery' ? 'var(--color-primary)' : 'var(--color-border)'}`, 
+                 display: 'flex', 
+                 alignItems: 'center', 
+                 gap: '1rem', 
+                 cursor: 'pointer',
+                 backgroundColor: formData.paymentMethod === 'Cash on Delivery' ? '#fdfdfd' : 'transparent',
+                 transition: 'all 0.2s'
+               }}>
+                  <input 
+                    type="radio" 
+                    name="paymentMethod" 
+                    value="Cash on Delivery" 
+                    checked={formData.paymentMethod === 'Cash on Delivery'} 
+                    onChange={handleInputChange}
+                    style={{ width: '18px', height: '18px' }} 
+                  />
+                  <Banknote size={24} style={{ color: formData.paymentMethod === 'Cash on Delivery' ? 'var(--color-primary)' : 'var(--color-text-light)' }} />
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Cash on Delivery (COD)</h4>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Pay with cash upon receiving your order at your doorstep</p>
                   </div>
                </label>
             </div>
@@ -256,7 +339,7 @@ const CheckoutScreen = () => {
 
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '20px', fontSize: '1.1rem', gap: '1rem' }}>
             {loading ? <Loader size={20} /> : <Lock size={20} />}
-            {loading ? 'Preparing Payment...' : 'Pay & Place Order'}
+            {loading ? 'Preparing Order...' : formData.paymentMethod === 'Card Payment' ? 'Pay & Place Order' : 'Review & Place Order'}
           </button>
         </form>
 
@@ -298,6 +381,41 @@ const CheckoutScreen = () => {
         onClose={() => setIsLoginModalOpen(false)} 
         onSuccess={onLoginSuccess}
       />
+
+      {/* COD Confirmation Modal */}
+      {showCODModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10001, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.6)', padding: '20px' }}>
+          <div className="modal-content" style={{ backgroundColor: 'white', width: '100%', maxWidth: '500px', borderRadius: 'var(--radius-lg)', padding: '2.5rem', position: 'relative', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
+             <h3 className="title-small" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+               <CheckCircle size={24} style={{ color: 'var(--color-primary)' }} /> Confirm Your Order
+             </h3>
+             
+             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
+                <div style={{ backgroundColor: '#f9f9f9', padding: '1.5rem', borderRadius: 'var(--radius-sm)' }}>
+                   <p style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#999', marginBottom: '0.5rem', letterSpacing: '1px' }}>Shipping To</p>
+                   <p style={{ fontWeight: 700, fontSize: '1.1rem' }}>{formData.firstName} {formData.lastName}</p>
+                   <p style={{ color: 'var(--color-text-light)', marginTop: '0.25rem' }}>{formData.address}, {formData.city}</p>
+                   <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>{formData.phoneNumber}</p>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem' }}>
+                   <span style={{ color: 'var(--color-text-light)' }}>Total Amount</span>
+                   <span style={{ fontSize: '1.5rem', fontWeight: 800 }}>Rs. {totalPrice.toLocaleString()}</span>
+                </div>
+
+                <div style={{ borderLeft: '4px solid var(--color-primary)', paddingLeft: '1rem', backgroundColor: '#f0f4f2', padding: '1rem', borderRadius: '0 4px 4px 0' }}>
+                   <p style={{ fontSize: '0.9rem', color: 'var(--color-primary)', fontWeight: 600 }}>Cash on Delivery Selected</p>
+                   <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.25rem' }}>Please keep the exact amount ready for the courier.</p>
+                </div>
+             </div>
+
+             <div style={{ display: 'flex', gap: '1rem' }}>
+                <button type="button" onClick={() => setShowCODModal(false)} className="btn btn-outline" style={{ flex: 1 }}>Edit Details</button>
+                <button type="button" onClick={confirmCODOrder} className="btn btn-primary" style={{ flex: 1.5 }}>Place Order</button>
+             </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

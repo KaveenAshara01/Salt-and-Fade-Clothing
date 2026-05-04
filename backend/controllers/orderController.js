@@ -99,7 +99,7 @@ const sendOrderEmail = async (order, type = 'buyer') => {
            <h4 style="margin: 0 0 10px; font-size: 14px; text-transform: uppercase; color: #999;">Shipping Address</h4>
            <p style="margin: 0; font-weight: 600;">${order.shippingAddress.firstName} ${order.shippingAddress.lastName}</p>
            <p style="margin: 5px 0;">${order.shippingAddress.address}, ${order.shippingAddress.city}</p>
-           <p style="margin: 5px 0; font-size: 13px; color: #777;">Payment: ${order.paymentMethod}</p>
+           <p style="margin: 5px 0; font-size: 13px; color: #777;">Payment Method: <strong style="color: #111;">${order.paymentMethod}</strong></p>
         </div>
         ` : `
         <div style="margin-top: 40px; padding: 25px; border: 1px dashed #ddd; border-radius: 8px;">
@@ -109,7 +109,7 @@ const sendOrderEmail = async (order, type = 'buyer') => {
            <p style="margin: 5px 0;">Phone: ${order.shippingAddress.phoneNumber}</p>
            ${order.shippingAddress.phoneNumber2 ? `<p style="margin: 5px 0;">Alt Phone: ${order.shippingAddress.phoneNumber2}</p>` : ''}
            <p style="margin: 5px 0;">Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}</p>
-           <p style="margin: 5px 0; font-size: 13px; color: #777;">Payment: ${order.paymentMethod}</p>
+           <p style="margin: 5px 0; font-size: 13px; color: #777;">Payment Method: <strong style="color: #111;">${order.paymentMethod}</strong></p>
         </div>
         `}
         
@@ -260,7 +260,7 @@ const addOrderItems = async (req, res) => {
       taxPrice,
       shippingPrice,
       totalPrice,
-      isPaid: paymentMethod === 'Card Payment', // Simulate success for card
+      isPaid: paymentMethod === 'Card Payment', // Card is paid immediately via webhook; COD is unpaid
       paidAt: paymentMethod === 'Card Payment' ? Date.now() : null,
     });
 
