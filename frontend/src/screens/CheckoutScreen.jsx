@@ -79,6 +79,36 @@ const CheckoutScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await axios.get('/api/settings');
+        setSettings(data);
+      } catch (err) {
+        console.error('Error fetching settings:', err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const cardDiscountPercent = (settings?.cardPaymentDiscount?.isActive) ? settings.cardPaymentDiscount.percentage : 0;
+  
+  const isOfferActive = () => {
+    if (!settings?.cardPaymentDiscount?.isActive) return false;
+    const { activeFrom, activeUntil } = settings.cardPaymentDiscount;
+    const now = new Date();
+    if (activeFrom && now < new Date(activeFrom)) return false;
+    if (activeUntil && now > new Date(activeUntil)) return false;
+    return true;
+  };
+
+  const discountAmount = (formData.paymentMethod === 'Card Payment' && isOfferActive()) 
+    ? (itemsPrice * cardDiscountPercent) / 100 
+    : 0;
+
+  const finalTotal = totalPrice - discountAmount;
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -303,9 +333,25 @@ const CheckoutScreen = () => {
                     style={{ width: '18px', height: '18px' }} 
                   />
                   <CreditCard size={24} style={{ color: formData.paymentMethod === 'Card Payment' ? 'var(--color-primary)' : 'var(--color-text-light)' }} />
-                  <div>
-                    <h4 style={{ fontWeight: 600 }}>Credit / Debit Card</h4>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Securely pay via PAYable — Visa, Mastercard, Amex, Diners & Discover</p>
+                  <div style={{ flex: 1 }}>
+                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h4 style={{ fontWeight: 600 }}>Credit / Debit Card</h4>
+                        {isOfferActive() && (
+                          <span style={{ 
+                            backgroundColor: 'var(--color-primary)', 
+                            color: 'white', 
+                            padding: '4px 10px', 
+                            borderRadius: '20px', 
+                            fontSize: '0.7rem', 
+                            fontWeight: 800,
+                            letterSpacing: '0.5px',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                          }}>
+                            {cardDiscountPercent}% OFF
+                          </span>
+                        )}
+                     </div>
+                     <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>Securely pay via PAYable — Visa, Mastercard, Amex, Diners & Discover</p>
                   </div>
                </label>
 
@@ -368,9 +414,15 @@ const CheckoutScreen = () => {
                 <span>Delivery {shippingPrice === 0 && <span style={{ color: 'var(--color-primary)', fontWeight: 700, marginLeft: '0.5rem' }}>(Free)</span>}</span>
                 <span>Rs. {shippingPrice.toLocaleString()}</span>
               </div>
+              {discountAmount > 0 && (
+                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-primary)', fontWeight: 600 }}>
+                   <span>Card Payment Offer ({cardDiscountPercent}%)</span>
+                   <span>- Rs. {discountAmount.toLocaleString()}</span>
+                 </div>
+               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 700, marginTop: '1rem', borderTop: '1px solid #ddd', paddingTop: '1.5rem' }}>
                 <span>Total</span>
-                <span>Rs. {totalPrice.toLocaleString()} LKR</span>
+                <span>Rs. {finalTotal.toLocaleString()} LKR</span>
               </div>
            </div>
         </aside>
@@ -400,7 +452,7 @@ const CheckoutScreen = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem' }}>
                    <span style={{ color: 'var(--color-text-light)' }}>Total Amount</span>
-                   <span style={{ fontSize: '1.5rem', fontWeight: 800 }}>Rs. {totalPrice.toLocaleString()}</span>
+                   <span style={{ fontSize: '1.5rem', fontWeight: 800 }}>Rs. {finalTotal.toLocaleString()}</span>
                 </div>
 
                 <div style={{ borderLeft: '4px solid var(--color-primary)', paddingLeft: '1rem', backgroundColor: '#f0f4f2', padding: '1rem', borderRadius: '0 4px 4px 0' }}>

@@ -4,6 +4,7 @@ const Product = require('../models/Product.js');
 const User = require('../models/User.js');
 const { sendOrderEmail } = require('./orderController.js');
 const jwt = require('jsonwebtoken');
+const Settings = require('../models/Settings.js');
 
 const MERCHANT_KEY = process.env.PAYABLE_MERCHANT_ID;
 const MERCHANT_TOKEN = process.env.PAYABLE_MERCHANT_TOKEN;
@@ -94,8 +95,23 @@ const initiatePayment = async (req, res) => {
     // 3. Generate sequential order number & invoiceId (PAYable max = 20 chars)
     const orderCount = await Order.countDocuments();
     const orderNumber = (orderCount + 1).toString().padStart(4, '0');
-    // Use timestamp for uniqueness, e.g. "INV1714454045000" (16 chars)
     const invoiceId = `INV${Date.now()}`;
+
+    // 3.5 Calculate Discount
+    const settings = await Settings.findOne();
+    let discountPrice = 0;
+    let finalTotal = totalPrice;
+
+    if (settings && settings.cardPaymentDiscount && settings.cardPaymentDiscount.isActive) {
+      const { percentage, activeFrom, activeUntil } = settings.cardPaymentDiscount;
+      const now = new Date();
+      const isWithinTime = (!activeFrom || now >= new Date(activeFrom)) && (!activeUntil || now <= new Date(activeUntil));
+
+      if (isWithinTime) {
+        discountPrice = (itemsPrice * percentage) / 100;
+        finalTotal = totalPrice - discountPrice;
+      }
+    }
 
     // 4. Create PENDING order in DB (isPaid = false, status = 'Pending Payment')
     const order = new Order({
@@ -107,7 +123,8 @@ const initiatePayment = async (req, res) => {
       itemsPrice,
       taxPrice: 0,
       shippingPrice,
-      totalPrice,
+      totalPrice: finalTotal,
+      discountPrice,
       isPaid: false,
       status: 'Pending Payment',
       paymentResult: {
@@ -121,7 +138,7 @@ const initiatePayment = async (req, res) => {
     // Stock will be reduced only after successful payment confirmation.
 
     // 6. Build PAYable payment params
-    const amount = formatAmount(totalPrice);
+    const amount = formatAmount(finalTotal);
     const currencyCode = 'LKR';
     const checkValue = computeCheckValue(invoiceId, amount, currencyCode);
 

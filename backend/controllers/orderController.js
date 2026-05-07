@@ -260,6 +260,7 @@ const addOrderItems = async (req, res) => {
       taxPrice,
       shippingPrice,
       totalPrice,
+      discountPrice: 0,
       isPaid: paymentMethod === 'Card Payment', // Card is paid immediately via webhook; COD is unpaid
       paidAt: paymentMethod === 'Card Payment' ? Date.now() : null,
     });
