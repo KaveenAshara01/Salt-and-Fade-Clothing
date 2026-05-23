@@ -20,6 +20,7 @@ const storage = new CloudinaryStorage({
        return `salt-and-fade/${folderName}`;
     },
     allowedFormats: ['jpg', 'png', 'jpeg', 'webp'],
+    format: 'webp', // Automatically convert to WebP to save storage space
   },
 });
 
