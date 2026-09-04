@@ -182,13 +182,30 @@ const PaymentReturnScreen = () => {
                 </p>
               </div>
             ))}
+            {order.discountPrice > 0 && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: '0.75rem',
+                  paddingTop: '0.75rem',
+                  borderTop: '1px solid #eee',
+                  color: 'var(--color-primary)',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                }}
+              >
+                <span>Card Payment Offer</span>
+                <span>- Rs. {order.discountPrice.toLocaleString()}</span>
+              </div>
+            )}
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginTop: '1rem',
-                paddingTop: '1rem',
-                borderTop: '2px solid #eee',
+                marginTop: order.discountPrice > 0 ? '0.5rem' : '1rem',
+                paddingTop: order.discountPrice > 0 ? '0.75rem' : '1rem',
+                borderTop: order.discountPrice > 0 ? '1px dashed #ddd' : '2px solid #eee',
                 fontWeight: 700,
                 fontSize: '1rem',
               }}

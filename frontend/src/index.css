@@ -1075,9 +1075,56 @@ ul {
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
+/* Admin Global Styles (Desktop & Tablet) */
+.admin-nav-container {
+  display: flex;
+  gap: 1.5rem;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 2.5rem;
+  padding-bottom: 0;
+}
+
+.admin-nav-item {
+  display: inline-block;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-light);
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.admin-nav-item:hover {
+  color: var(--color-primary);
+}
+
+.admin-nav-item.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.admin-settings-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .admin-settings-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
 /* Admin Responsive Styles - Mobile Only */
 @media (max-width: 768px) {
-  /* Admin Sub-Navigation */
+  /* Admin Sub-Navigation Mobile Override */
   .admin-nav-container {
     display: flex;
     overflow-x: auto;
@@ -1085,6 +1132,7 @@ ul {
     border-bottom: 1px solid var(--color-border);
     margin: -20px -24px 2rem -24px;
     padding: 0 24px;
+    gap: 0;
     scrollbar-width: none; /* Hide scrollbar for Firefox */
     -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
     position: sticky;
@@ -1098,7 +1146,7 @@ ul {
   
   .admin-nav-item {
     display: block;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -1106,6 +1154,7 @@ ul {
     color: var(--color-text-light);
     white-space: nowrap;
     border-bottom: 2px solid transparent;
+    margin-bottom: 0;
     transition: all 0.2s;
   }
   

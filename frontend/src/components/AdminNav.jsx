@@ -24,6 +24,12 @@ const AdminNav = () => {
       >
         Orders
       </Link>
+      <Link 
+        to="/admin/settings" 
+        className={`admin-nav-item ${pathname === '/admin/settings' ? 'active' : ''}`}
+      >
+        Payment Offer
+      </Link>
     </div>
   );
 };

@@ -25,6 +25,7 @@ import ProductListScreen from './screens/admin/ProductListScreen.jsx';
 import ProductEditScreen from './screens/admin/ProductEditScreen.jsx';
 import CollectionListScreen from './screens/admin/CollectionListScreen.jsx';
 import CollectionEditScreen from './screens/admin/CollectionEditScreen.jsx';
+import AdminSettingsScreen from './screens/admin/AdminSettingsScreen.jsx';
 
 import { CartProvider } from './context/CartContext.jsx';
 import { UserProvider } from './context/UserContext.jsx';
@@ -59,6 +60,7 @@ const router = createBrowserRouter(
       <Route path="/admin/collection/create" element={<CollectionEditScreen />} />
       <Route path="/admin/collection/:id/edit" element={<CollectionEditScreen />} />
       <Route path="/admin/orderlist" element={<AdminOrderListScreen />} />
+      <Route path="/admin/settings" element={<AdminSettingsScreen />} />
     </Route>
   )
 );
