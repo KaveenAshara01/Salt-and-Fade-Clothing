@@ -8,6 +8,9 @@ const settingsSchema = mongoose.Schema(
       activeFrom: { type: Date },
       activeUntil: { type: Date },
     },
+    promoCodeFeature: {
+      isActive: { type: Boolean, default: false },
+    },
   },
   {
     timestamps: true,

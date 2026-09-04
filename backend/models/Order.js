@@ -71,6 +71,11 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: 0.0,
     },
+    coupon: {
+      code: { type: String },
+      percentage: { type: Number, default: 0 },
+      discountAmount: { type: Number, default: 0 },
+    },
     isPaid: {
       type: Boolean,
       required: true,

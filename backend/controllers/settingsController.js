@@ -11,9 +11,15 @@ const getSettings = async (req, res) => {
       settings = await Settings.create({
         cardPaymentDiscount: {
           percentage: 5,
-          isActive: true
-        }
+          isActive: true,
+        },
+        promoCodeFeature: {
+          isActive: false,
+        },
       });
+    } else if (!settings.promoCodeFeature) {
+      settings.promoCodeFeature = { isActive: false };
+      await settings.save();
     }
     res.json(settings);
   } catch (error) {
@@ -33,7 +39,14 @@ const updateSettings = async (req, res) => {
           percentage: 5,
           isActive: true,
         },
+        promoCodeFeature: {
+          isActive: false,
+        },
       });
+    }
+
+    if (!settings.promoCodeFeature) {
+      settings.promoCodeFeature = { isActive: false };
     }
 
     if (req.body.cardPaymentDiscount) {
@@ -57,6 +70,12 @@ const updateSettings = async (req, res) => {
 
       if (activeUntil !== undefined) {
         settings.cardPaymentDiscount.activeUntil = activeUntil ? new Date(activeUntil) : null;
+      }
+    }
+
+    if (req.body.promoCodeFeature) {
+      if (req.body.promoCodeFeature.isActive !== undefined) {
+        settings.promoCodeFeature.isActive = Boolean(req.body.promoCodeFeature.isActive);
       }
     }
 

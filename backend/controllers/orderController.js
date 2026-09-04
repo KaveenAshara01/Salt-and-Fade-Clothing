@@ -4,6 +4,8 @@ const User = require('../models/User.js');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const Settings = require('../models/Settings.js');
+const Coupon = require('../models/Coupon.js');
 
 // Helper for sending emails
 const sendOrderEmail = async (order, type = 'buyer') => {
@@ -87,10 +89,16 @@ const sendOrderEmail = async (order, type = 'buyer') => {
                  Delivery Charge: Rs. ${order.shippingPrice.toLocaleString()}
               </div>
            </div>
-           ${order.discountPrice > 0 ? `
+           ${order.coupon && order.coupon.discountAmount > 0 ? `
+           <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <div style="text-align: right; font-size: 14px; color: #1D4E3A; font-weight: 600; width: 100%;">
+                 Promo Code (${order.coupon.code} - ${order.coupon.percentage}%): - Rs. ${order.coupon.discountAmount.toLocaleString()}
+              </div>
+           </div>` : ''}
+           ${order.discountPrice > (order.coupon?.discountAmount || 0) ? `
            <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
               <div style="text-align: right; font-size: 14px; color: #1D4E3A; font-weight: 600; width: 100%;">
-                 Card Payment Offer: - Rs. ${order.discountPrice.toLocaleString()}
+                 Card Payment Offer: - Rs. ${(order.discountPrice - (order.coupon?.discountAmount || 0)).toLocaleString()}
               </div>
            </div>` : ''}
            <div style="display: flex; justify-content: flex-end;">
@@ -222,6 +230,7 @@ const addOrderItems = async (req, res) => {
       taxPrice,
       shippingPrice,
       totalPrice,
+      promoCode,
     } = req.body;
 
     if (orderItems && orderItems.length === 0) {
@@ -255,6 +264,31 @@ const addOrderItems = async (req, res) => {
     const orderCount = await Order.countDocuments();
     const orderNumber = (orderCount + 1).toString().padStart(4, '0');
 
+    // 1.5 Calculate Promo Discount if applicable
+    const settings = await Settings.findOne();
+    let promoDiscount = 0;
+    let appliedCoupon = null;
+
+    if (
+      settings?.promoCodeFeature?.isActive &&
+      promoCode &&
+      typeof promoCode === 'string' &&
+      promoCode.trim()
+    ) {
+      const cleanCode = promoCode.toUpperCase().trim();
+      const coupon = await Coupon.findOne({ code: cleanCode, isActive: true });
+      if (coupon && coupon.percentage > 0) {
+        promoDiscount = Math.round((itemsPrice * coupon.percentage) / 100);
+        appliedCoupon = {
+          code: coupon.code,
+          percentage: coupon.percentage,
+          discountAmount: promoDiscount,
+        };
+      }
+    }
+
+    const calculatedTotal = Math.max(0, itemsPrice + (shippingPrice || 0) - promoDiscount);
+
     // 2. Create Order
     const order = new Order({
       orderItems,
@@ -265,8 +299,9 @@ const addOrderItems = async (req, res) => {
       itemsPrice,
       taxPrice,
       shippingPrice,
-      totalPrice,
-      discountPrice: 0,
+      totalPrice: calculatedTotal,
+      discountPrice: promoDiscount,
+      coupon: appliedCoupon || undefined,
       isPaid: paymentMethod === 'Card Payment', // Card is paid immediately via webhook; COD is unpaid
       paidAt: paymentMethod === 'Card Payment' ? Date.now() : null,
     });

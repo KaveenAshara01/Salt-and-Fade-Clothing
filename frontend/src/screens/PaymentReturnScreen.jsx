@@ -182,7 +182,7 @@ const PaymentReturnScreen = () => {
                 </p>
               </div>
             ))}
-            {order.discountPrice > 0 && (
+            {order.coupon && order.coupon.discountAmount > 0 && (
               <div
                 style={{
                   display: 'flex',
@@ -195,8 +195,25 @@ const PaymentReturnScreen = () => {
                   fontSize: '0.9rem',
                 }}
               >
+                <span>Promo Code ({order.coupon.code} - {order.coupon.percentage}%)</span>
+                <span>- Rs. {order.coupon.discountAmount.toLocaleString()}</span>
+              </div>
+            )}
+            {order.discountPrice > (order.coupon?.discountAmount || 0) && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: order.coupon?.discountAmount > 0 ? '0.4rem' : '0.75rem',
+                  paddingTop: order.coupon?.discountAmount > 0 ? 0 : '0.75rem',
+                  borderTop: order.coupon?.discountAmount > 0 ? 'none' : '1px solid #eee',
+                  color: 'var(--color-primary)',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                }}
+              >
                 <span>Card Payment Offer</span>
-                <span>- Rs. {order.discountPrice.toLocaleString()}</span>
+                <span>- Rs. {(order.discountPrice - (order.coupon?.discountAmount || 0)).toLocaleString()}</span>
               </div>
             )}
             <div
