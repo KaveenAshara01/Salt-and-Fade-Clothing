@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { CreditCard, Info, Lock, ArrowLeft, Banknote, CheckCircle } from 'lucide-react';
+import { CreditCard, Info, Lock, ArrowLeft, Banknote, CheckCircle, Tag, X } from 'lucide-react';
 import Loader from '../components/Loader';
 import axios from 'axios';
 import LoginModal from '../components/LoginModal';
@@ -81,6 +81,13 @@ const CheckoutScreen = () => {
   const [error, setError] = useState(null);
   const [settings, setSettings] = useState(null);
 
+  // Promo Code State
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState(null);
+  const [promoSuccess, setPromoSuccess] = useState(null);
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -93,6 +100,12 @@ const CheckoutScreen = () => {
     fetchSettings();
   }, []);
 
+  // Promo discount calculation
+  const promoDiscount = appliedCoupon && appliedCoupon.percentage > 0
+    ? Math.round((itemsPrice * appliedCoupon.percentage) / 100)
+    : 0;
+
+  // Card payment discount calculation
   const cardDiscountPercent = (settings?.cardPaymentDiscount?.isActive && Number(settings.cardPaymentDiscount.percentage) > 0) 
     ? Number(settings.cardPaymentDiscount.percentage) 
     : 0;
@@ -107,11 +120,47 @@ const CheckoutScreen = () => {
     return true;
   };
 
-  const discountAmount = (formData.paymentMethod === 'Card Payment' && isOfferActive()) 
-    ? Math.round((itemsPrice * cardDiscountPercent) / 100) 
+  const eligibleForCardDiscount = Math.max(0, itemsPrice - promoDiscount);
+  const cardDiscountAmount = (formData.paymentMethod === 'Card Payment' && isOfferActive()) 
+    ? Math.round((eligibleForCardDiscount * cardDiscountPercent) / 100) 
     : 0;
 
-  const finalTotal = Math.max(0, totalPrice - discountAmount);
+  const totalDiscountAmount = promoDiscount + cardDiscountAmount;
+  const finalTotal = Math.max(0, totalPrice - totalDiscountAmount);
+
+  const handleApplyPromo = async (e) => {
+    if (e) e.preventDefault();
+    setPromoError(null);
+    setPromoSuccess(null);
+
+    const cleanCode = promoCodeInput.trim().toUpperCase();
+    if (!cleanCode) {
+      setPromoError('Please enter a promo code.');
+      return;
+    }
+
+    try {
+      setPromoLoading(true);
+      const { data } = await axios.post('/api/coupons/validate', { code: cleanCode });
+      if (data && data.valid) {
+        setAppliedCoupon({ code: data.code, percentage: data.percentage });
+        setPromoSuccess(`Promo code "${data.code}" applied! ${data.percentage}% discount.`);
+        setPromoCodeInput('');
+      }
+    } catch (err) {
+      setPromoError(err.response?.data?.message || 'Invalid or inactive promo code.');
+      setAppliedCoupon(null);
+    } finally {
+      setPromoLoading(false);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedCoupon(null);
+    setPromoSuccess(null);
+    setPromoError(null);
+    setPromoCodeInput('');
+  };
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -161,7 +210,14 @@ const CheckoutScreen = () => {
     // Step 1: Call backend to create pending order + get signed payment params
     const { data } = await axios.post(
       '/api/payment/initiate',
-      { orderItems: cartItems, shippingAddress, itemsPrice, shippingPrice, totalPrice },
+      {
+        orderItems: cartItems,
+        shippingAddress,
+        itemsPrice,
+        shippingPrice,
+        totalPrice,
+        promoCode: appliedCoupon ? appliedCoupon.code : undefined,
+      },
       config
     );
 
@@ -205,6 +261,7 @@ const CheckoutScreen = () => {
       itemsPrice,
       shippingPrice,
       totalPrice,
+      promoCode: appliedCoupon ? appliedCoupon.code : undefined,
     };
 
     const { data } = await axios.post('/api/orders', orderData, config);
@@ -408,6 +465,108 @@ const CheckoutScreen = () => {
               ))}
            </div>
 
+           {/* Optional Promo Code Box (Rendered only when Promo Code Feature is Active) */}
+           {settings?.promoCodeFeature?.isActive && (
+             <div style={{ borderTop: '1px solid #ddd', paddingTop: '1.25rem', marginBottom: '1.25rem' }}>
+               <p style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                 <Tag size={16} style={{ color: 'var(--color-primary)' }} />
+                 Have a Promo Code?
+               </p>
+
+               {appliedCoupon ? (
+                 <div
+                   style={{
+                     display: 'flex',
+                     justifyContent: 'space-between',
+                     alignItems: 'center',
+                     backgroundColor: '#e6f4ea',
+                     border: '1px solid #ceead6',
+                     padding: '10px 14px',
+                     borderRadius: 'var(--radius-sm)',
+                     color: '#137333',
+                   }}
+                 >
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                     <CheckCircle size={18} />
+                     <div>
+                       <span style={{ fontWeight: 800, letterSpacing: '1px', fontFamily: 'monospace', fontSize: '0.95rem' }}>
+                         {appliedCoupon.code}
+                       </span>
+                       <span style={{ fontSize: '0.8rem', marginLeft: '0.5rem', opacity: 0.9 }}>
+                         ({appliedCoupon.percentage}% OFF)
+                       </span>
+                     </div>
+                   </div>
+
+                   <button
+                     type="button"
+                     onClick={handleRemovePromo}
+                     style={{
+                       background: 'none',
+                       border: 'none',
+                       cursor: 'pointer',
+                       color: '#c5221f',
+                       display: 'flex',
+                       alignItems: 'center',
+                       gap: '2px',
+                       fontSize: '0.8rem',
+                       fontWeight: 600,
+                       padding: '4px',
+                     }}
+                     title="Remove promo code"
+                   >
+                     <X size={16} />
+                     <span>Remove</span>
+                   </button>
+                 </div>
+               ) : (
+                 <form onSubmit={handleApplyPromo} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                   <div style={{ flex: 1, minWidth: '150px' }}>
+                     <input
+                       type="text"
+                       placeholder="Enter Promo Code"
+                       className="input-field"
+                       value={promoCodeInput}
+                       onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
+                       style={{
+                         padding: '10px 14px',
+                         fontSize: '0.9rem',
+                         textTransform: 'uppercase',
+                         fontWeight: 700,
+                         letterSpacing: '1px',
+                       }}
+                     />
+                   </div>
+                   <button
+                     type="submit"
+                     disabled={promoLoading || !promoCodeInput.trim()}
+                     className="btn btn-primary"
+                     style={{
+                       padding: '10px 18px',
+                       fontSize: '0.85rem',
+                       fontWeight: 700,
+                       whiteSpace: 'nowrap',
+                     }}
+                   >
+                     {promoLoading ? <Loader size={16} /> : 'Apply'}
+                   </button>
+                 </form>
+               )}
+
+               {promoError && (
+                 <p style={{ fontSize: '0.8rem', color: '#c5221f', marginTop: '0.5rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                   <Info size={14} /> {promoError}
+                 </p>
+               )}
+
+               {promoSuccess && !appliedCoupon && (
+                 <p style={{ fontSize: '0.8rem', color: '#137333', marginTop: '0.5rem', fontWeight: 500 }}>
+                   {promoSuccess}
+                 </p>
+               )}
+             </div>
+           )}
+
            <div style={{ borderTop: '1px solid #ddd', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-text-light)' }}>
                 <span>Subtotal</span>
@@ -417,10 +576,16 @@ const CheckoutScreen = () => {
                 <span>Delivery {shippingPrice === 0 && <span style={{ color: 'var(--color-primary)', fontWeight: 700, marginLeft: '0.5rem' }}>(Free)</span>}</span>
                 <span>Rs. {shippingPrice.toLocaleString()}</span>
               </div>
-              {discountAmount > 0 && (
+              {promoDiscount > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-primary)', fontWeight: 600 }}>
+                  <span>Promo Discount ({appliedCoupon?.code} - {appliedCoupon?.percentage}%)</span>
+                  <span>- Rs. {promoDiscount.toLocaleString()}</span>
+                </div>
+              )}
+              {cardDiscountAmount > 0 && (
                  <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-primary)', fontWeight: 600 }}>
                    <span>Card Payment Offer ({cardDiscountPercent}%)</span>
-                   <span>- Rs. {discountAmount.toLocaleString()}</span>
+                   <span>- Rs. {cardDiscountAmount.toLocaleString()}</span>
                  </div>
                )}
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 700, marginTop: '1rem', borderTop: '1px solid #ddd', paddingTop: '1.5rem' }}>

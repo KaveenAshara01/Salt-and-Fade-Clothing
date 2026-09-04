@@ -5,6 +5,7 @@ const User = require('../models/User.js');
 const { sendOrderEmail } = require('./orderController.js');
 const jwt = require('jsonwebtoken');
 const Settings = require('../models/Settings.js');
+const Coupon = require('../models/Coupon.js');
 
 const MERCHANT_KEY = process.env.PAYABLE_MERCHANT_ID;
 const MERCHANT_TOKEN = process.env.PAYABLE_MERCHANT_TOKEN;
@@ -58,6 +59,7 @@ const initiatePayment = async (req, res) => {
       itemsPrice,
       shippingPrice,
       totalPrice,
+      promoCode,
     } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
@@ -97,11 +99,32 @@ const initiatePayment = async (req, res) => {
     const orderNumber = (orderCount + 1).toString().padStart(4, '0');
     const invoiceId = `INV${Date.now()}`;
 
-    // 3.5 Calculate Discount
+    // 3.5 Calculate Discounts (Promo Code and/or Card Payment Offer)
     const settings = await Settings.findOne();
-    let discountPrice = 0;
-    let finalTotal = totalPrice;
+    let promoDiscount = 0;
+    let cardDiscount = 0;
+    let appliedCoupon = null;
 
+    // 3.5.1 Validate and apply promo code if feature is enabled
+    if (
+      settings?.promoCodeFeature?.isActive &&
+      promoCode &&
+      typeof promoCode === 'string' &&
+      promoCode.trim()
+    ) {
+      const cleanCode = promoCode.toUpperCase().trim();
+      const coupon = await Coupon.findOne({ code: cleanCode, isActive: true });
+      if (coupon && coupon.percentage > 0) {
+        promoDiscount = Math.round((itemsPrice * coupon.percentage) / 100);
+        appliedCoupon = {
+          code: coupon.code,
+          percentage: coupon.percentage,
+          discountAmount: promoDiscount,
+        };
+      }
+    }
+
+    // 3.5.2 Apply card payment offer if active
     if (
       settings &&
       settings.cardPaymentDiscount &&
@@ -114,10 +137,13 @@ const initiatePayment = async (req, res) => {
       const isWithinTime = (!activeFrom || now >= new Date(activeFrom)) && (!activeUntil || now <= new Date(activeUntil));
 
       if (isWithinTime) {
-        discountPrice = Math.round((itemsPrice * percentage) / 100);
-        finalTotal = Math.max(0, totalPrice - discountPrice);
+        const eligibleItemsPrice = Math.max(0, itemsPrice - promoDiscount);
+        cardDiscount = Math.round((eligibleItemsPrice * percentage) / 100);
       }
     }
+
+    const totalDiscount = promoDiscount + cardDiscount;
+    const finalTotal = Math.max(0, itemsPrice + (shippingPrice || 0) - totalDiscount);
 
     // 4. Create PENDING order in DB (isPaid = false, status = 'Pending Payment')
     const order = new Order({
@@ -130,7 +156,8 @@ const initiatePayment = async (req, res) => {
       taxPrice: 0,
       shippingPrice,
       totalPrice: finalTotal,
-      discountPrice,
+      discountPrice: totalDiscount,
+      coupon: appliedCoupon || undefined,
       isPaid: false,
       status: 'Pending Payment',
       paymentResult: {
