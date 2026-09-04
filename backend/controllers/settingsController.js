@@ -28,9 +28,36 @@ const updateSettings = async (req, res) => {
   try {
     let settings = await Settings.findOne();
     if (!settings) {
-      settings = new Settings(req.body);
-    } else {
-      settings.cardPaymentDiscount = req.body.cardPaymentDiscount || settings.cardPaymentDiscount;
+      settings = new Settings({
+        cardPaymentDiscount: {
+          percentage: 5,
+          isActive: true,
+        },
+      });
+    }
+
+    if (req.body.cardPaymentDiscount) {
+      const { isActive, percentage, activeFrom, activeUntil } = req.body.cardPaymentDiscount;
+
+      if (isActive !== undefined) {
+        settings.cardPaymentDiscount.isActive = Boolean(isActive);
+      }
+
+      if (percentage !== undefined) {
+        const parsedPercentage = Number(percentage);
+        if (isNaN(parsedPercentage) || parsedPercentage < 0 || parsedPercentage > 100) {
+          return res.status(400).json({ message: 'Discount percentage must be a number between 0 and 100.' });
+        }
+        settings.cardPaymentDiscount.percentage = Math.round(parsedPercentage * 100) / 100;
+      }
+
+      if (activeFrom !== undefined) {
+        settings.cardPaymentDiscount.activeFrom = activeFrom ? new Date(activeFrom) : null;
+      }
+
+      if (activeUntil !== undefined) {
+        settings.cardPaymentDiscount.activeUntil = activeUntil ? new Date(activeUntil) : null;
+      }
     }
 
     const updatedSettings = await settings.save();

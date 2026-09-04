@@ -93,10 +93,13 @@ const CheckoutScreen = () => {
     fetchSettings();
   }, []);
 
-  const cardDiscountPercent = (settings?.cardPaymentDiscount?.isActive) ? settings.cardPaymentDiscount.percentage : 0;
+  const cardDiscountPercent = (settings?.cardPaymentDiscount?.isActive && Number(settings.cardPaymentDiscount.percentage) > 0) 
+    ? Number(settings.cardPaymentDiscount.percentage) 
+    : 0;
   
   const isOfferActive = () => {
     if (!settings?.cardPaymentDiscount?.isActive) return false;
+    if (!cardDiscountPercent || cardDiscountPercent <= 0) return false;
     const { activeFrom, activeUntil } = settings.cardPaymentDiscount;
     const now = new Date();
     if (activeFrom && now < new Date(activeFrom)) return false;
@@ -105,10 +108,10 @@ const CheckoutScreen = () => {
   };
 
   const discountAmount = (formData.paymentMethod === 'Card Payment' && isOfferActive()) 
-    ? (itemsPrice * cardDiscountPercent) / 100 
+    ? Math.round((itemsPrice * cardDiscountPercent) / 100) 
     : 0;
 
-  const finalTotal = totalPrice - discountAmount;
+  const finalTotal = Math.max(0, totalPrice - discountAmount);
 
   useEffect(() => {
     if (cartItems.length === 0) {

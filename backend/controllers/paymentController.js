@@ -102,14 +102,20 @@ const initiatePayment = async (req, res) => {
     let discountPrice = 0;
     let finalTotal = totalPrice;
 
-    if (settings && settings.cardPaymentDiscount && settings.cardPaymentDiscount.isActive) {
+    if (
+      settings &&
+      settings.cardPaymentDiscount &&
+      settings.cardPaymentDiscount.isActive &&
+      typeof settings.cardPaymentDiscount.percentage === 'number' &&
+      settings.cardPaymentDiscount.percentage > 0
+    ) {
       const { percentage, activeFrom, activeUntil } = settings.cardPaymentDiscount;
       const now = new Date();
       const isWithinTime = (!activeFrom || now >= new Date(activeFrom)) && (!activeUntil || now <= new Date(activeUntil));
 
       if (isWithinTime) {
-        discountPrice = (itemsPrice * percentage) / 100;
-        finalTotal = totalPrice - discountPrice;
+        discountPrice = Math.round((itemsPrice * percentage) / 100);
+        finalTotal = Math.max(0, totalPrice - discountPrice);
       }
     }
 

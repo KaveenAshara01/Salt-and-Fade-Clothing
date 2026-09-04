@@ -87,6 +87,12 @@ const sendOrderEmail = async (order, type = 'buyer') => {
                  Delivery Charge: Rs. ${order.shippingPrice.toLocaleString()}
               </div>
            </div>
+           ${order.discountPrice > 0 ? `
+           <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+              <div style="text-align: right; font-size: 14px; color: #1D4E3A; font-weight: 600; width: 100%;">
+                 Card Payment Offer: - Rs. ${order.discountPrice.toLocaleString()}
+              </div>
+           </div>` : ''}
            <div style="display: flex; justify-content: flex-end;">
               <div style="text-align: right; font-size: 20px; font-weight: 800; color: #111; width: 100%;">
                  TOTAL: Rs. ${order.totalPrice.toLocaleString()} LKR

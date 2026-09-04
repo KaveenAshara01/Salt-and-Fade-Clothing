@@ -143,6 +143,7 @@ const Header = () => {
                           <Link to="/admin/productlist" className="dropdown-item">Inventory</Link>
                           <Link to="/admin/collectionlist" className="dropdown-item">Collections</Link>
                           <Link to="/admin/orderlist" className="dropdown-item">Full Order List</Link>
+                          <Link to="/admin/settings" className="dropdown-item">Payment Offer</Link>
                         </>
                       )}
                       <button onClick={logoutHandler} className="dropdown-item" style={{ color: 'var(--color-error)', borderTop: '1px solid var(--color-border)', width: '100%', textAlign: 'left', marginTop: '0.5rem' }}>
@@ -206,9 +207,14 @@ const Header = () => {
                 My Account ({userInfo.name.split(' ')[0]}) <User size={18} />
               </Link>
               {userInfo.isAdmin && (
-                <Link to="/admin/productlist" className="mobile-nav-link" onClick={closeMenu} style={{ color: 'var(--color-accent)' }}>
-                  Admin Dashboard <ChevronRight size={16} />
-                </Link>
+                <>
+                  <Link to="/admin/productlist" className="mobile-nav-link" onClick={closeMenu} style={{ color: 'var(--color-accent)' }}>
+                    Admin Dashboard <ChevronRight size={16} />
+                  </Link>
+                  <Link to="/admin/settings" className="mobile-nav-link" onClick={closeMenu} style={{ color: 'var(--color-accent)' }}>
+                    Payment Offer <ChevronRight size={16} />
+                  </Link>
+                </>
               )}
               <button 
                 onClick={logoutHandler} 
