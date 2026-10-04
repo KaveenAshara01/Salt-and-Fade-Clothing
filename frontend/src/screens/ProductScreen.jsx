@@ -326,7 +326,7 @@ const ProductScreen = () => {
               </div>
               <div>
                 <h4 style={{ fontSize: '0.9rem', fontWeight: 600 }}>Standard Delivery</h4>
-                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Free over Rs. 6,000</p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Free over Rs. 9,000</p>
               </div>
             </div>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>

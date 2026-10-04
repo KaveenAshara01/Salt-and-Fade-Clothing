@@ -61,11 +61,11 @@ const Header = () => {
     <>
       <div className="marquee-container" id="top-bar">
         <div className="marquee-content">
-          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 6,000</span>
+          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 9,000</span>
           <span style={{ paddingRight: '120px' }}>★ CREATE AN ACCOUNT AND UNLOCK LOYALTY BENEFITS</span>
-          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 6,000</span>
+          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 9,000</span>
           <span style={{ paddingRight: '120px' }}>★ CREATE AN ACCOUNT AND UNLOCK LOYALTY BENEFITS</span>
-          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 6,000</span>
+          <span style={{ paddingRight: '120px' }}>★ FREE DELIVERY FOR ORDERS OVER RS. 9,000</span>
           <span style={{ paddingRight: '120px' }}>★ CREATE AN ACCOUNT AND UNLOCK LOYALTY BENEFITS</span>
         </div>
       </div>

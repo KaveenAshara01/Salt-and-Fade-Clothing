@@ -70,12 +70,12 @@ export const CartProvider = ({ children }) => {
       return acc + qty;
     }, 0);
     
-    // Priority 1: Free delivery over 6000
+    // Priority 1: Free delivery over 9000
     // Priority 2: 3+ items is 550
     // Priority 3: Default is 450
     let shipping = 0;
     if (validItems.length > 0) {
-      if (subTotal >= 6000) {
+      if (subTotal >= 9000) {
         shipping = 0;
       } else {
         shipping = totalQty >= 3 ? 550 : 450;
