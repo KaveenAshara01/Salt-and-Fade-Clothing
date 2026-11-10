@@ -1,0 +1,16 @@
+{
+  "initiallyCollapsed": true,
+  "utilityIconsHidden": true,
+  "opens": true,
+  "collectionsCollapsed": true,
+  "collectionsExpand": true,
+  "escapeClosesAndFocusesToggle": true,
+  "outsideCloses": true,
+  "navigationCloses": true,
+  "desktopCloses": true,
+  "accountCollapsed": true,
+  "adminOptionsAvailable": true,
+  "noOverflow": true,
+  "signOutCloses": true,
+  "runtimeErrors": []
+}
