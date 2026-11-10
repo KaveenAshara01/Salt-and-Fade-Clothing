@@ -34,7 +34,7 @@ const CartScreen = () => {
   };
 
   return (
-    <div className="container" style={{ padding: 'max(90px, 120px) var(--container-padding) 60px', minHeight: '80vh' }}>
+    <div className="container" style={{ padding: '48px var(--container-padding) 60px', minHeight: '80vh' }}>
       <h1 className="title-medium" style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', marginBottom: '3rem' }}>Shopping Cart</h1>
 
       {checkoutError && (

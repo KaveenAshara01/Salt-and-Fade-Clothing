@@ -1,0 +1,94 @@
+﻿/* Optional indie-pop treatment. Every rule is scoped to the theme switch. */
+html[data-style='indie-pop'] {
+  --coast-ink: #233274;
+  --coast-blue: #254edb;
+  --coast-orange: #ff8a46;
+  --coast-ivory: #fffdf7;
+  --coast-pink: #f6c7dd;
+  --coast-yellow: #edfa9c;
+}
+html[data-style='indie-pop'] .sun-announcement { background: #edfa9c; color: #28346b; letter-spacing: 1.6px; }
+html[data-style='indie-pop'] .sun-header { border-bottom-color: #e5e3f0; }
+html[data-style='indie-pop'] .sun-desktop-nav > a::after { background: #d52b8b; }
+html[data-style='indie-pop'] .sun-cart span { background: #f4cee5; color: #66316d; }
+html[data-style='indie-pop'] .editorial-store .session-hero-copy h1 {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(48px, 6vw, 88px);
+  letter-spacing: -4px;
+  line-height: .98;
+  color: #edfa9c;
+  max-width: 700px;
+}
+html[data-style='indie-pop'] .session-hero-copy > .eyebrow {
+  display: inline-flex;
+  color: #25377a;
+  background: #f6c7dd;
+  border-radius: 40px;
+  padding: 9px 15px;
+  letter-spacing: 1.3px;
+}
+html[data-style='indie-pop'] .editorial-store .sun-button,
+html[data-style='indie-pop'] .pool-escape .sun-button {
+  background: #edfa9c;
+  border-color: #edfa9c;
+  color: #25377a;
+  border-radius: 40px;
+  font-size: 11px;
+  letter-spacing: .8px;
+  padding: 16px 25px;
+}
+html[data-style='indie-pop'] .editorial-store .sun-button:hover { background: #f6c7dd; border-color: #f6c7dd; transform: translateY(-3px); }
+html[data-style='indie-pop'] .editorial-store .sun-section-heading h2 { font-weight: 600; letter-spacing: -1.4px; }
+html[data-style='indie-pop'] .editorial-store .sun-section-heading .eyebrow { color: #a22a73; }
+html[data-style='indie-pop'] .editorial-store .product-tabs { gap: 12px; padding-bottom: 5px; }
+html[data-style='indie-pop'] .editorial-store .product-tabs button { padding: 10px 17px; border-radius: 30px; border: 1px solid #dedff0; font-size: 9px; color: #414f78; }
+html[data-style='indie-pop'] .editorial-store .product-tabs button[aria-pressed='true'] { color: #fff; background: #254edb; border-color: #254edb; }
+html[data-style='indie-pop'] .editorial-store .product-tabs button:hover { border-color: #254edb; }
+html[data-style='indie-pop'] .product-label { background: #f6c7dd; color: #68325d; border-radius: 24px; padding: 7px 12px; }
+html[data-style='indie-pop'] .product-view { background: #edfa9cf0; color: #25377a; }
+html[data-style='indie-pop'] .editorial-store .sun-product-info h3 { font-weight: 500; }
+html[data-style='indie-pop'] .in-grid-campaign .eyebrow { color: #edfa9c; }
+html[data-style='indie-pop'] .in-grid-campaign h3 { font-style: italic; font-weight: 700; color: #f9d9ea; letter-spacing: -1.7px; }
+html[data-style='indie-pop'] .in-grid-campaign .session-cta { color: #edfa9c; }
+html[data-style='indie-pop'] .brand-interlude { background: #e9e3ff; }
+html[data-style='indie-pop'] .brand-interlude h2 { color: #3e3180; font-style: italic; font-weight: 600; }
+html[data-style='indie-pop'] .brand-interlude p { color: #5b5474; }
+html[data-style='indie-pop'] .brand-interlude .eyebrow { color: #a22a73; }
+html[data-style='indie-pop'] .brand-interlude .text-link { color: #3e3180; }
+html[data-style='indie-pop'] .coast-notes-grid > a > .eyebrow { color: #a22a73; }
+html[data-style='indie-pop'] .coast-notes-grid h3 { font-weight: 500; }
+html[data-style='indie-pop'] .pool-escape-copy h2 { color: #fce5f1; font-style: italic; font-weight: 700; letter-spacing: -2.5px; }
+html[data-style='indie-pop'] .pool-escape-copy .eyebrow { color: #edfa9c; }
+html[data-style='indie-pop'] .pool-escape-copy { position: relative; }
+html[data-style='indie-pop'] .pool-escape-copy::after {
+  content: '✳';
+  position: absolute;
+  right: -55px;
+  top: 65px;
+  color: #edfa9c;
+  font-size: 85px;
+  line-height: 1;
+  transform: rotate(12deg);
+  pointer-events: none;
+}
+html[data-style='indie-pop'] .store-service-strip { background: #edfa9c; color: #28346b; border-top-color: transparent; }
+html[data-style='indie-pop'] .sun-footer { background: #f9e4ee; color: #3f3b6d; }
+html[data-style='indie-pop'] .sun-footer h3,
+html[data-style='indie-pop'] .sun-socials a { color: #90346c; }
+html[data-style='indie-pop'] .sun-footer p,
+html[data-style='indie-pop'] .sun-footer-top > div > span,
+html[data-style='indie-pop'] .sun-footer-bottom { color: #6c5d7a; }
+html[data-style='indie-pop'] .sun-footer-bottom { border-top-color: #e2cddd; }
+html[data-style='indie-pop'] .sun-footer a:hover { color: #254edb; }
+@media (max-width: 800px) {
+  html[data-style='indie-pop'] .pool-escape-copy::after { right: 10px; top: 25px; font-size: 55px; }
+}
+@media (max-width: 560px) {
+  html[data-style='indie-pop'] .editorial-store .session-hero-copy h1 { font-size: 54px; letter-spacing: -2.7px; }
+  html[data-style='indie-pop'] .session-hero-copy > .eyebrow { font-size: 8px; padding: 8px 12px; }
+  html[data-style='indie-pop'] .editorial-store .product-tabs { gap: 9px; }
+  html[data-style='indie-pop'] .editorial-store .product-tabs button { padding: 9px 14px; }
+  html[data-style='indie-pop'] .pool-escape-copy::after { right: 22px; top: 32px; font-size: 43px; }
+}

@@ -7,6 +7,15 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import './index.css';
+import './branding.css';
+import './premium.css';
+import './indie-pop.css';
+import './after-hours.css';
+import './tennis-club.css';
+import './performance-finish.css';
+import './graphic-storefront.css';
+import './collection-discovery.css';
+import { INDIE_POP_ENABLED, AFTER_HOURS_ENABLED, TENNIS_CLUB_ENABLED, PERFORMANCE_FINISH_ENABLED } from './theme';
 import App from './App.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
 
@@ -34,6 +43,12 @@ import CheckoutScreen from './screens/CheckoutScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import AdminOrderListScreen from './screens/admin/AdminOrderListScreen.jsx';
 import PaymentReturnScreen from './screens/PaymentReturnScreen.jsx';
+
+// One switch restores the prior visual treatment without changing content or layout.
+document.documentElement.dataset.style = INDIE_POP_ENABLED ? 'indie-pop' : '';
+document.documentElement.dataset.mood = TENNIS_CLUB_ENABLED ? 'tennis-club' : AFTER_HOURS_ENABLED ? 'after-hours' : '';
+document.documentElement.dataset.finish = PERFORMANCE_FINISH_ENABLED ? 'performance' : '';
+document.documentElement.dataset.storefront = 'graphic';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -76,5 +91,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 
 console.log('%c=======================================', 'color: #1D4E3A; font-weight: bold');
-console.log('%c✅ Salt & Fade Frontend Successfully Started', 'color: #1D4E3A; font-weight: bold; font-size: 14px');
+console.log('%câœ… Salt & Fade Frontend Successfully Started', 'color: #1D4E3A; font-weight: bold; font-size: 14px');
 console.log('%c=======================================', 'color: #1D4E3A; font-weight: bold');

@@ -1,0 +1,73 @@
+{
+  "desktop": {
+    "width": 1440,
+    "documentWidth": 1425,
+    "h1": 1,
+    "products": 18,
+    "categories": 7,
+    "banners": [
+      {
+        "name": "campaign-banner campaign-banner--surf",
+        "source": "http://127.0.0.1:5173/images/campaigns/surf-desktop.jpg",
+        "loaded": 1942,
+        "heading": "A SUNSHINE\nSTATE OF MIND."
+      },
+      {
+        "name": "campaign-banner campaign-banner--artwork campaign-banner--volleyball",
+        "source": "http://127.0.0.1:5173/images/campaigns/volleyball-desktop.jpg",
+        "loaded": 1746
+      },
+      {
+        "name": "campaign-banner campaign-banner--tennis",
+        "source": "http://127.0.0.1:5173/images/campaigns/tennis-desktop.jpg",
+        "loaded": 1536,
+        "heading": "AFTER\nTHE GAME."
+      },
+      {
+        "name": "campaign-banner campaign-banner--pool",
+        "source": "http://127.0.0.1:5173/images/campaigns/pool-desktop.jpg",
+        "loaded": 1920,
+        "heading": "TAKE THE\nLONG WAY OFF."
+      }
+    ],
+    "brokenImages": [],
+    "carouselMoved": true,
+    "edgeButtonDisabled": false
+  },
+  "mobile": {
+    "width": 390,
+    "documentWidth": 390,
+    "h1": 1,
+    "products": 18,
+    "categories": 7,
+    "banners": [
+      {
+        "name": "campaign-banner campaign-banner--surf",
+        "source": "http://127.0.0.1:5173/images/campaigns/surf-mobile.jpg",
+        "loaded": 1073,
+        "heading": "A SUNSHINE\nSTATE OF MIND."
+      },
+      {
+        "name": "campaign-banner campaign-banner--artwork campaign-banner--volleyball",
+        "source": "http://127.0.0.1:5173/images/campaigns/volleyball-mobile.jpg",
+        "loaded": 415
+      },
+      {
+        "name": "campaign-banner campaign-banner--tennis",
+        "source": "http://127.0.0.1:5173/images/campaigns/tennis-mobile.jpg",
+        "loaded": 768,
+        "heading": "AFTER\nTHE GAME."
+      },
+      {
+        "name": "campaign-banner campaign-banner--pool",
+        "source": "http://127.0.0.1:5173/images/campaigns/pool-mobile.jpg",
+        "loaded": 1006,
+        "heading": "TAKE THE\nLONG WAY OFF."
+      }
+    ],
+    "brokenImages": [],
+    "carouselMoved": true,
+    "edgeButtonDisabled": false
+  },
+  "runtimeErrors": []
+}

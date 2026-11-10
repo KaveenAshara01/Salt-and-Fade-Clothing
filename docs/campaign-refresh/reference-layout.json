@@ -1,0 +1,170 @@
+{
+  "desktop": [
+    {
+      "id": "shopify-section-template--17182324949198__hero_banner",
+      "tag": "DIV",
+      "heading": "BE BETTER EVERYDAY",
+      "top": 0,
+      "height": 900,
+      "width": 1425,
+      "images": 2
+    },
+    {
+      "id": "shopify-section-template--17182324949198__featured_collection_womens",
+      "tag": "DIV",
+      "heading": "SHOP THE LATEST STYLES",
+      "top": 900,
+      "height": 682,
+      "width": 1425,
+      "images": 16
+    },
+    {
+      "id": "shopify-section-template--17182324949198__promo_banner_1",
+      "tag": "DIV",
+      "heading": "SHOP WOMEN'S DENIM",
+      "top": 1582,
+      "height": 700,
+      "width": 1425,
+      "images": 2
+    },
+    {
+      "id": "shopify-section-template--17182324949198__category_images_TFJMn9",
+      "tag": "DIV",
+      "heading": "SHOP BY CATEGORY",
+      "top": 2282,
+      "height": 600,
+      "width": 1425,
+      "images": 5
+    },
+    {
+      "id": "shopify-section-template--17182324949198__category_images_ifQDrB",
+      "tag": "DIV",
+      "heading": "SHOP BY CATEGORY",
+      "top": 2882,
+      "height": 600,
+      "width": 1425,
+      "images": 5
+    },
+    {
+      "id": "shopify-section-template--17182324949198__unisex_category_images_iaedW7",
+      "tag": "DIV",
+      "heading": "SHOP BY ACTIVITY",
+      "top": 3482,
+      "height": 587,
+      "width": 1425,
+      "images": 8
+    },
+    {
+      "id": "shopify-section-template--17182324949198__promo_banner_2",
+      "tag": "DIV",
+      "heading": "SHOP SHOES",
+      "top": 4070,
+      "height": 550,
+      "width": 1425,
+      "images": 1
+    },
+    {
+      "id": "shopify-section-template--17182324949198__category_banners",
+      "tag": "DIV",
+      "heading": "SHOP WOMENS",
+      "top": 4620,
+      "height": 655,
+      "width": 1425,
+      "images": 3
+    },
+    {
+      "id": "shopify-section-template--17182324949198__featured_collection_CeVjmJ",
+      "tag": "DIV",
+      "heading": "ACCESSORIES",
+      "top": 5275,
+      "height": 666,
+      "width": 1425,
+      "images": 8
+    }
+  ],
+  "desktop-text": "BE BETTER EVERYDAY\n\nExplore our Collection\n\nSHOP MENS\nSHOP WOMENS\nSHOP THE LATEST STYLES\nSHOP ALL\n\nPhantom X\n\nSheer White\n\nLKR 15,500.00\n\nMuscle X Mind Tee\n\nSheer White\n\nLKR 4,850.00\n\nNFA Training Short\n\nCharcoal Grey\n\nLKR 4,450.00\n\nEveryday Cross Body Bag\n\nJet Black\n\nLKR 7,500.00\n\nVitalSoft Zip Up Jacket\n\nJet Black\n\nLKR 6,650.00\n\nTrackline Mesh Jersey\n\nBurnt Crimson\n\nLKR 5,450.00\n\nC.S.C Nylon Jogger\n\nJet Black\n\nLKR 5,500.00\n\nDouble Dice Tee\n\nChampagne White\n\nLKR 4,850.00\n\nSHOP WOMEN'S DENIM\n\nBuilt for comfort, styled for every day.\n\nSHOP NOW\n\nBUILD YOUR STYLE\n\nSHOP BY CATEGORY\nSPORTS BRA\nLEGGINGS\nCROP TOP\nTSHIRTS\nPANTS\n\nBUILD YOUR STYLE\n\nSHOP BY CATEGORY\nTSHIRTS\nPANTS\nTANKS\nSHORTS\nPOLOS\nSHOP BY ACTIVITY\nMENS\nWOMENS\nLIFTING\nRUNNING\nREST DAY\nCASUAL\nSHOP SHOES\n\nExplore the shoe collection\n\nSHOP NOW\nSHOP WOMENS\nSHOP MENS\nSHOP ACCESSORIES\nACCESSORIES\nSHOP ALL\n\nEssential Sling Bag\n\nJet Black\n\nLKR 7,500.00\n\nEssential Hydrator\n\nWhite Top\n\nLKR 3,250.00\n\nEveryday Cross Body Bag\n\nJet Black\n\nLKR 7,500.00\n\nOld School Lifting Straps\n\nBlack\n\nLKR 5,950.00",
+  "mobile": [
+    {
+      "id": "shopify-section-template--17182324949198__hero_banner",
+      "tag": "DIV",
+      "heading": "BE BETTER EVERYDAY",
+      "top": 0,
+      "height": 760,
+      "width": 390,
+      "images": 2
+    },
+    {
+      "id": "shopify-section-template--17182324949198__featured_collection_womens",
+      "tag": "DIV",
+      "heading": "SHOP THE LATEST STYLES",
+      "top": 760,
+      "height": 493,
+      "width": 390,
+      "images": 16
+    },
+    {
+      "id": "shopify-section-template--17182324949198__promo_banner_1",
+      "tag": "DIV",
+      "heading": "SHOP WOMEN'S DENIM",
+      "top": 1252,
+      "height": 591,
+      "width": 390,
+      "images": 2
+    },
+    {
+      "id": "shopify-section-template--17182324949198__category_images_TFJMn9",
+      "tag": "DIV",
+      "heading": "SHOP BY CATEGORY",
+      "top": 1843,
+      "height": 349,
+      "width": 390,
+      "images": 5
+    },
+    {
+      "id": "shopify-section-template--17182324949198__category_images_ifQDrB",
+      "tag": "DIV",
+      "heading": "SHOP BY CATEGORY",
+      "top": 2192,
+      "height": 349,
+      "width": 390,
+      "images": 5
+    },
+    {
+      "id": "shopify-section-template--17182324949198__unisex_category_images_iaedW7",
+      "tag": "DIV",
+      "heading": "SHOP BY ACTIVITY",
+      "top": 2542,
+      "height": 388,
+      "width": 390,
+      "images": 8
+    },
+    {
+      "id": "shopify-section-template--17182324949198__promo_banner_2",
+      "tag": "DIV",
+      "heading": "SHOP SHOES",
+      "top": 2930,
+      "height": 422,
+      "width": 390,
+      "images": 1
+    },
+    {
+      "id": "shopify-section-template--17182324949198__category_banners",
+      "tag": "DIV",
+      "heading": "SHOP WOMENS",
+      "top": 3352,
+      "height": 1427,
+      "width": 390,
+      "images": 3
+    },
+    {
+      "id": "shopify-section-template--17182324949198__featured_collection_CeVjmJ",
+      "tag": "DIV",
+      "heading": "ACCESSORIES",
+      "top": 4779,
+      "height": 482,
+      "width": 390,
+      "images": 8
+    }
+  ],
+  "mobile-text": "BE BETTER EVERYDAY\n\nExplore our Collection\n\nSHOP MENS\nSHOP WOMENS\nSHOP THE LATEST STYLES\nSHOP ALL\n\nPhantom X\n\nSheer White\n\nLKR 15,500.00\n\nMuscle X Mind Tee\n\nSheer White\n\nLKR 4,850.00\n\nNFA Training Short\n\nCharcoal Grey\n\nLKR 4,450.00\n\nEveryday Cross Body Bag\n\nJet Black\n\nLKR 7,500.00\n\nVitalSoft Zip Up Jacket\n\nJet Black\n\nLKR 6,650.00\n\nTrackline Mesh Jersey\n\nBurnt Crimson\n\nLKR 5,450.00\n\nC.S.C Nylon Jogger\n\nJet Black\n\nLKR 5,500.00\n\nDouble Dice Tee\n\nChampagne White\n\nLKR 4,850.00\n\nSHOP WOMEN'S DENIM\n\nBuilt for comfort, styled for every day.\n\nSHOP NOW\n\nBUILD YOUR STYLE\n\nSHOP BY CATEGORY\nSPORTS BRA\nLEGGINGS\nCROP TOP\nTSHIRTS\nPANTS\n\nBUILD YOUR STYLE\n\nSHOP BY CATEGORY\nTSHIRTS\nPANTS\nTANKS\nSHORTS\nPOLOS\nSHOP BY ACTIVITY\nMENS\nWOMENS\nLIFTING\nRUNNING\nREST DAY\nCASUAL\nSHOP SHOES\n\nExplore the shoe collection\n\nSHOP NOW\nSHOP WOMENS\nSHOP MENS\nSHOP ACCESSORIES\nACCESSORIES\nSHOP ALL\n\nEssential Sling Bag\n\nJet Black\n\nLKR 7,500.00\n\nEssential Hydrator\n\nWhite Top\n\nLKR 3,250.00\n\nEveryday Cross Body Bag\n\nJet Black\n\nLKR 7,500.00\n\nOld School Lifting Straps\n\nBlack\n\nLKR 5,950.00"
+}

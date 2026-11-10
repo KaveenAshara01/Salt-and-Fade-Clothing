@@ -1,0 +1,171 @@
+/* Shared storefront direction: mainly white, logo blue, and yellow accents.
+   Root scoping takes precedence over the retained legacy theme layers. */
+html[data-storefront='graphic'][data-style][data-mood][data-finish] {
+  --brand-blue: #0095ff;
+  --brand-blue-text: #006bb8;
+  --brand-yellow: #fed925;
+  --color-bg: #fff;
+  --color-loader-bg: #fff;
+  --color-text: #000;
+  --color-text-light: #595959;
+  --color-primary: #fed925;
+  --color-primary-light: #ffe65b;
+  --color-accent: var(--brand-blue-text);
+  --color-footer: #000;
+  --color-border: #dedede;
+  --coast-ink: #000;
+  --coast-blue: var(--brand-blue-text);
+  --coast-orange: #fed925;
+  --coast-yellow: #fed925;
+  --coast-ivory: #fff;
+  --font-main: Arial, Helvetica, sans-serif;
+  --font-display: 'Arial Black', Arial, sans-serif;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --shadow-md: none;
+  --shadow-lg: none;
+  scroll-padding-top: 112px;
+}
+
+body { background: var(--color-bg); }
+#root .storefront-content { color: #000; background: #fff; }
+#root .editorial-store { color: #000; }
+#root :is(a, button, summary, input, select, textarea):focus-visible { outline: 2px solid var(--brand-blue-text); outline-offset: 4px; }
+html[data-storefront='graphic'] ::selection { background: #fed925; color: #000; }
+
+#root .storefront-content :is(h1, h2, h3),
+#root .sun-footer h3 {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  text-transform: uppercase;
+}
+#root .sun-section-heading h2 { font-size: clamp(25px, 3vw, 40px); line-height: 1.1; letter-spacing: -1px; color: #000; }
+#root .eyebrow { color: #595959; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+#root .text-link { color: var(--brand-blue-text); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+#root .text-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+#root .sun-button,
+#root .btn-primary,
+#root .btn-accent,
+#root .pdp-add {
+  background: #fed925;
+  color: #000;
+  border: 1px solid #fed925;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: .2px;
+  text-transform: uppercase;
+  min-height: 46px;
+}
+#root :is(.sun-button, .btn-primary, .btn-accent, .pdp-add):hover:not(:disabled) { background: var(--brand-blue); border-color: var(--brand-blue); color: #000; transform: none; }
+#root .btn { border-radius: 0; }
+#root :is(.btn, .pdp-add):disabled { background: #e9e9e9; border-color: #e9e9e9; color: #666; cursor: not-allowed; }
+
+/* Campaign photography stays full bleed, with the same graphic type as the nav. */
+#root .editorial-store .session-hero { min-height: 500px; height: min(740px, calc(100svh - 96px)); }
+#root .editorial-store .session-hero::before { background: linear-gradient(0deg, #0009, transparent 75%); }
+#root .editorial-store .session-hero-copy { bottom: 65px; }
+#root .editorial-store .session-hero-copy h1 { color: #fff; font-size: clamp(44px, 6vw, 88px); font-weight: 900; letter-spacing: -2px; line-height: .98; margin-block: 20px; }
+#root :is(.session-hero-copy, .in-grid-campaign, .pool-escape-copy) .eyebrow { color: #fed925; background: transparent; }
+#root .session-hero-copy p { color: #fff; }
+#root .session-shop { color: #fff; font-weight: 700; text-transform: uppercase; }
+#root .performance-explore { color: #fff; text-transform: uppercase; font-weight: 700; }
+#root .performance-collections { max-width: none; padding: 20px 32px; background: #fff; border-bottom: 1px solid #dedede; }
+#root .performance-collections > a { color: #000; font-weight: 900; }
+#root .performance-collections > a:hover { background: #fed925; }
+#root .performance-collections > a > span { color: #666; }
+
+/* Consistent products across home, catalogue, and related items. */
+#root .editorial-store :is(.sun-products, .shop-session, .sun-collections, .coast-notes) { padding-top: 56px; padding-bottom: 60px; }
+#root .product-tabs { gap: 24px; border-bottom: 1px solid #dedede; }
+#root .product-tabs button { color: #666; font-weight: 700; border-radius: 0; }
+#root .product-tabs button[aria-pressed='true'] { color: var(--brand-blue-text); border-bottom: 3px solid var(--brand-blue); background: transparent; }
+#root :is(.sun-product-photo, .product-image-container, .pdp-main-photo, .pdp-related-card > div) { background: #f5f5f5; border-radius: 0; box-shadow: none; }
+#root :is(.sun-product-info h3, .product-info h3, .pdp-related-card h3) { color: #000; font: 900 12px/1.5 Arial, sans-serif; text-transform: uppercase; letter-spacing: 0; }
+#root :is(.sun-product-info > span, .product-price, .pdp-related-card p) { color: #000; font: 400 12px/1.6 Arial, sans-serif; }
+#root :is(.product-label, .pdp-image-label, .pdp-related-card > div > span) { background: #fed925; color: #000; border-radius: 0; font-weight: 700; }
+#root .product-view { background: #fed925; color: #000; border-radius: 0; font-weight: 900; text-transform: uppercase; }
+#root .quick-add-btn { background: #fed925; color: #000; border-radius: 0; }
+#root .product-card { border-radius: 0; box-shadow: none; background: #fff; }
+#root .catalog-message { background: #f5f5f5; color: #000; border-radius: 0; }
+#root .filter-bar { border: 1px solid #dedede; border-radius: 0; box-shadow: none; background: #fff; }
+#root :is(.filter-trigger, .sort-trigger) { color: #000; font-weight: 900; text-transform: uppercase; }
+#root .filter-drawer { background: #fff; }
+
+/* Editorial blocks use the same limited palette. */
+#root .brand-interlude { background: #fff; color: #000; border-block: 1px solid #dedede; }
+#root .brand-interlude :is(h2, p, .eyebrow, .text-link) { color: #000; }
+#root .brand-interlude .text-link { color: var(--brand-blue-text); }
+#root .brand-interlude h2 { font-size: clamp(30px, 4vw, 56px); line-height: 1.05; letter-spacing: -1.5px; }
+#root .sun-collection-grid a { background: #fff; border-radius: 0; }
+#root .editorial-store .sun-collection-grid a > span { color: #000; font-weight: 900; text-transform: uppercase; padding: 16px 0; }
+#root .coast-notes-grid h3 { color: #000; font-size: clamp(19px, 2vw, 26px); line-height: 1.2; }
+#root .coast-notes-grid > a > .eyebrow { color: #595959; }
+#root .coast-notes-grid p { color: #595959; }
+#root .pool-escape { margin: 0; max-width: none; border-radius: 0; }
+#root .pool-escape::before { background: linear-gradient(0deg, #0009, #0001); }
+#root .pool-escape-copy h2 { color: #fff; font: 900 clamp(36px, 5vw, 68px)/1 'Arial Black', Arial, sans-serif; letter-spacing: -1.5px; }
+#root .pool-escape-copy p { color: #fff; }
+#root .store-service-strip { background: #fed925; color: #000; border: 0; padding: 22px 24px; font-weight: 700; text-transform: uppercase; }
+#root .sun-story { background: #fff; color: #000; }
+#root .story-copy h1 { font-weight: 900; }
+#root .story-copy em { color: #000; font-style: normal; text-decoration: underline; text-decoration-color: #fed925; text-decoration-thickness: 6px; text-underline-offset: 7px; }
+#root .sun-club { background: #fff; color: #000; border-top: 4px solid var(--brand-blue); }
+#root .sun-club > svg { color: var(--brand-blue-text); }
+#root .sun-club :is(em, .eyebrow) { color: #000; font-style: normal; }
+#root .about-lifestyle { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; padding: 48px 32px; max-width: 1440px; margin: auto; }
+#root .about-lifestyle-photo { display: block; width: 100%; height: auto; }
+#root .about-lifestyle .sun-club { border: 0; padding-inline: 24px; }
+
+/* Product purchase controls and account/checkout forms. */
+#root .pdp-page { --pdp-ink: #000; --pdp-blue: var(--brand-blue-text); --pdp-coral: #fed925; --pdp-line: #dedede; }
+#root .pdp-heading h1 { font-weight: 900; letter-spacing: -1px; }
+#root .pdp-sizes input:checked + span { background: var(--brand-blue); border-color: var(--brand-blue); color: #000; }
+#root .pdp-sizes input:not(:disabled):not(:checked) + span:hover { background: #fff5b6; border-color: #000; }
+#root .pdp-delivery-note { background: #f5f5f5; color: #444; }
+#root .pdp-delivery-note > svg { color: #000; }
+#root :is(.pdp-kicker, .pdp-inline-link, .pdp-help, .pdp-breadcrumbs, .pdp-gallery-note, .pdp-category, .pdp-stock, .pdp-rich-copy, .pdp-detail-copy) { color: #595959; }
+#root .pdp-related-card > div > svg { color: #000; background: #fed925; }
+#root .pdp-loading-dot { background: var(--brand-blue); }
+#root .input-field { background: #fff; color: #000; border: 1px solid #bdbdbd; border-radius: 0; box-shadow: none; }
+#root .input-field:focus { border-color: var(--brand-blue-text); }
+#root input { accent-color: var(--brand-blue-text); }
+#root .checkout-sidebar { border-radius: 0; }
+#root .sun-loading { color: #000; }
+#root .sun-loading svg { color: var(--brand-blue-text); }
+
+/* A quiet white footer closes the storefront. */
+#root .sun-footer { background: #fff; color: #000; border-top: 1px solid #dedede; padding-top: 48px; }
+#root .sun-footer :is(h3, p, a, .sun-socials a, .sun-footer-top > div > span, .sun-footer-bottom) { color: #000; }
+#root .sun-footer h3 { font-size: 12px; letter-spacing: 0; }
+#root .sun-footer .sun-socials a { color: var(--brand-blue-text); }
+#root .sun-footer p { color: #595959; }
+#root .sun-footer .original-brand { background: transparent; border-radius: 0; padding: 0; }
+#root .sun-footer-bottom { border-top-color: #dedede; letter-spacing: 0; }
+#root .sun-footer a:hover { color: var(--brand-blue-text); text-decoration: underline; text-underline-offset: 4px; }
+#root #storefront-header .sun-desktop-nav > a:hover,
+#root #storefront-header .collection-menu summary:hover { color: var(--brand-blue-text); }
+#root .pdp-inline-link { color: var(--brand-blue-text); }
+
+@media (max-width: 800px) {
+  #root .about-lifestyle { grid-template-columns: 1fr; padding: 28px 20px; gap: 0; }
+  #root .performance-collections { padding: 16px 20px; }
+  #root .editorial-store :is(.sun-products, .shop-session, .sun-collections, .coast-notes) { padding-top: 36px; padding-bottom: 40px; }
+  #root .store-service-strip { gap: 16px; flex-wrap: wrap; text-align: center; font-size: 10px; }
+}
+@media (max-width: 560px) {
+  #root .editorial-store .session-hero { height: 72svh; min-height: 480px; }
+  #root .editorial-store .session-hero-copy { bottom: 65px; }
+  #root .editorial-store .session-hero-copy h1 { font-size: clamp(38px, 10vw, 54px); letter-spacing: -1.5px; }
+  #root .performance-explore { display: flex; width: fit-content; margin: 10px 0 0; }
+  #root .sun-section-heading { gap: 16px; }
+  #root .sun-section-heading h2 { font-size: 26px; }
+  #root .pool-escape-copy { padding: 40px 20px; }
+  #root .sun-footer { padding-top: 36px; }
+}

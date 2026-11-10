@@ -1,0 +1,99 @@
+{
+  "desktop": {
+    "width": 1440,
+    "noOverflow": true,
+    "sectionOrder": [
+      "campaign-banner campaign-banner--surf",
+      "home-product-carousel container",
+      "campaign-banner campaign-banner--artwork campaign-banner--volleyball",
+      "collection-discovery container",
+      "home-lifestyle",
+      "campaign-banner campaign-banner--pool",
+      "home-story-tiles",
+      "home-product-carousel container",
+      "store-service-strip"
+    ],
+    "products": 16,
+    "productCardsPerView": 4.05,
+    "categoryCardsPerView": 4.05,
+    "tilesStacked": false,
+    "tileColumns": "448.328px 448.328px 448.344px",
+    "bannerFont": "Fraunces, Georgia, serif",
+    "mobileBanner": "http://127.0.0.1:5173/images/campaigns/surf-desktop-v4.jpg",
+    "colours": {
+      "blue": "#0095ff",
+      "yellow": "#fed925",
+      "background": "#fff"
+    },
+    "brokenImages": [],
+    "productsControlWorks": true,
+    "categoriesControlWorks": true,
+    "activitiesControlWorks": true,
+    "filterWorks": true
+  },
+  "mobile": {
+    "width": 390,
+    "noOverflow": true,
+    "sectionOrder": [
+      "campaign-banner campaign-banner--surf",
+      "home-product-carousel container",
+      "campaign-banner campaign-banner--artwork campaign-banner--volleyball",
+      "collection-discovery container",
+      "home-lifestyle",
+      "campaign-banner campaign-banner--pool",
+      "home-story-tiles",
+      "home-product-carousel container",
+      "store-service-strip"
+    ],
+    "products": 16,
+    "productCardsPerView": 2.23,
+    "categoryCardsPerView": 2.23,
+    "tilesStacked": true,
+    "tileColumns": "350px",
+    "bannerFont": "Fraunces, Georgia, serif",
+    "mobileBanner": "http://127.0.0.1:5173/images/campaigns/surf-mobile-editorial-v5.jpg",
+    "colours": {
+      "blue": "#0095ff",
+      "yellow": "#fed925",
+      "background": "#fff"
+    },
+    "brokenImages": [],
+    "productsControlWorks": true,
+    "categoriesControlWorks": true,
+    "activitiesControlWorks": true,
+    "filterWorks": true
+  },
+  "narrow-mobile": {
+    "width": 320,
+    "noOverflow": true,
+    "sectionOrder": [
+      "campaign-banner campaign-banner--surf",
+      "home-product-carousel container",
+      "campaign-banner campaign-banner--artwork campaign-banner--volleyball",
+      "collection-discovery container",
+      "home-lifestyle",
+      "campaign-banner campaign-banner--pool",
+      "home-story-tiles",
+      "home-product-carousel container",
+      "store-service-strip"
+    ],
+    "products": 16,
+    "productCardsPerView": 2.25,
+    "categoryCardsPerView": 2.25,
+    "tilesStacked": true,
+    "tileColumns": "280px",
+    "bannerFont": "Fraunces, Georgia, serif",
+    "mobileBanner": "http://127.0.0.1:5173/images/campaigns/surf-mobile-editorial-v5.jpg",
+    "colours": {
+      "blue": "#0095ff",
+      "yellow": "#fed925",
+      "background": "#fff"
+    },
+    "brokenImages": [],
+    "productsControlWorks": true,
+    "categoriesControlWorks": true,
+    "activitiesControlWorks": true,
+    "filterWorks": true
+  },
+  "runtimeErrors": []
+}

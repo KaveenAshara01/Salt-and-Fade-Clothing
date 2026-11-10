@@ -88,7 +88,7 @@ const ShopScreen = () => {
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', padding: 'max(90px, 120px) var(--container-padding) 6rem' }}>
+    <div style={{ backgroundColor: 'var(--color-bg)', minHeight: '100vh', padding: '48px var(--container-padding) 64px' }}>
       
       {/* Mobile Filter Drawer Overlay */}
       <div 

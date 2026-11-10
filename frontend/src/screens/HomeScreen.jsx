@@ -1,358 +1,78 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
+import CampaignBanner from '../components/CampaignBanner';
+import LifestyleRail from '../components/LifestyleRail';
+import ProductCarousel, { ProductCard } from '../components/ProductCarousel';
+import '../home-campaigns.css';
 
 const HomeScreen = () => {
   const [products, setProducts] = useState([]);
   const [collections, setCollections] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [collectionName, setCollectionName] = useState('');
-
+  const [status, setStatus] = useState('loading');
+  const collectionRail = useRef(null);
+  const [collectionEdges, setCollectionEdges] = useState({ start: true, end: true });
+  const updateCollectionEdges = () => {
+    const rail = collectionRail.current;
+    if (rail) setCollectionEdges({ start: rail.scrollLeft <= 2, end: rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 2 });
+  };
+  const browseCollections = direction => {
+    const rail = collectionRail.current;
+    rail?.scrollBy({ left: direction * rail.clientWidth, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  };
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const collectionId = queryParams.get('collection');
-
+  const collectionId = new URLSearchParams(location.search).get('collection');
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const { data } = await axios.get(`/api/products${collectionId ? `?collection=${collectionId}` : ''}`);
-        setProducts(data);
-
-        if (collectionId && data.length > 0 && data[0].collectionRef) {
-          setCollectionName(data[0].collectionRef.name);
-        } else {
-          setCollectionName('');
-        }
-
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    const fetchCollections = async () => {
-      try {
-        const { data } = await axios.get('/api/collections');
-        setCollections(data);
-      } catch (err) {
-        console.error('Error fetching collections:', err);
-      }
-    };
-
-    fetchProducts();
-    fetchCollections();
+    const rail = collectionRail.current;
+    if (!rail) return;
+    const observer = new ResizeObserver(updateCollectionEdges);
+    observer.observe(rail);
+    updateCollectionEdges();
+    return () => observer.disconnect();
+  }, [collections, collectionId]);
+  useEffect(() => {
+    let active = true;
+    setStatus('loading');
+    axios.get(`/api/products?sort=latest${collectionId ? `&collection=${encodeURIComponent(collectionId)}` : ''}`)
+      .then(({ data }) => { if (active) { setProducts(data); setStatus('ready'); } })
+      .catch(() => { if (active) setStatus('error'); });
+    axios.get('/api/collections').then(({ data }) => { if (active) setCollections(data); }).catch(() => {});
+    return () => { active = false; };
   }, [collectionId]);
-
-  return (
-    <>
-      {/* Hero Section - Only show on main shop page or home */}
-      {!collectionId && (
-        <section style={{
-          position: 'relative',
-          minHeight: '70vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#e0d8d0 url("/images/hero_1.png") center/cover no-repeat',
-          overflow: 'hidden'
-        }}>
-          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}></div>
-          <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 10, textAlign: 'center', color: 'var(--color-white)', paddingTop: '80px' }}>
-            <h1 className="title-handwritten" style={{ 
-              fontSize: 'clamp(4rem, 11vw, 8rem)', 
-              textShadow: '0 2px 12px rgba(0,0,0,0.2)',
-              color: 'var(--color-white)',
-              lineHeight: 1.2,
-              textAlign: 'center',
-              marginBottom: '2rem'
-            }}>
-              Made for <br /> island days
-            </h1>
-            <p className="subtitle" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: '600px', margin: '0 auto 2.5rem', fontSize: '1.25rem' }}>
-              Every essential is a part of Island
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Featured Products */}
-      <section id="new-arrivals" style={{ padding: collectionId ? '8rem 0 4rem' : '3rem 0 4rem' }}>
-        <div className="container">
-          <div className="section-header-shaggy">
-            <h2>{collectionId ? collectionName : 'New Arrivals'}</h2>
-            <p>{collectionId ? `Exploring the ${collectionName} Collection` : 'Freshly dropped essentials for the island lifestyle.'}</p>
-          </div>
-
-          {loading ? (
-            <div className="flex-center" style={{ minHeight: '200px' }}>
-              <div className="spin" style={{ width: '40px', height: '40px', border: '4px solid var(--color-border)', borderTopColor: 'var(--color-primary)', borderRadius: '50%' }}></div>
-            </div>
-          ) : error ? (
-            <div style={{ color: 'var(--color-error)', textAlign: 'center', padding: '2rem' }}>Error: {error}</div>
-          ) : products.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '4rem' }}>No products found in this collection.</div>
-          ) : (
-            <>
-              <div className="product-grid-scroll">
-                {products.slice(0, collectionId ? undefined : 8).map((product) => {
-                  const isOutOfStock = product.countInStock ? Object.values(product.countInStock).reduce((a, b) => a + Number(b), 0) === 0 : true;
-                  return (
-                    <div key={product._id} className="product-card">
-                      <Link to={`/product/${product._id}`}>
-                        <div className="product-image-container" style={{ position: 'relative' }}>
-                          <img
-                            src={product.images && product.images.length > 0 ? product.images[0].url : '/images/logo.jpg'}
-                            alt={product.name}
-                          />
-                          {isOutOfStock && (
-                            <div style={{
-                              position: 'absolute',
-                              inset: 0,
-                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                              backdropFilter: 'blur(3px)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              zIndex: 2,
-                            }}>
-                              <span style={{
-                                backgroundColor: '#1a1a1a',
-                                color: '#fff',
-                                padding: '8px 20px',
-                                fontSize: '0.75rem',
-                                fontWeight: 700,
-                                letterSpacing: '2px',
-                                textTransform: 'uppercase',
-                              }}>Sold Out</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="product-info">
-                        <h3 className="product-title">{product.name}</h3>
-                        <p className="product-price">
-                          {new Intl.NumberFormat('en-LK', {
-                            style: 'currency',
-                            currency: 'LKR',
-                            currencyDisplay: 'code',
-                            minimumFractionDigits: 2
-                          }).format(product.price).replace('LKR', 'Rs').trim()} LKR
-                        </p>
-                      </div>
-                    </Link>
-                  </div>
-                )})}
-              </div>
-
-              {!collectionId && products.length > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
-                  <Link
-                    to="/products?sort=latest"
-                    className="btn btn-primary"
-                    style={{
-                      padding: '14px 40px',
-                      backgroundColor: 'var(--color-primary)',
-                      color: 'var(--color-footer)',
-                      borderRadius: '2px',
-                      fontSize: '0.85rem',
-                      letterSpacing: '1.5px',
-                      fontWeight: 700
-                    }}
-                  >
-                    SEE ALL
-                  </Link>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Vibe Section - Only show on home/main shop */}
-      {!collectionId && (
-        <section style={{ padding: '3rem 0 4rem', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
-          <div className="container vibe-section-grid">
-
-            {/* Left Column: Image */}
-            <div style={{ position: 'relative', aspectRatio: '1.2 / 1', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-              <img
-                src="/images/hero_2.png"
-                alt="Brand Vibe"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </div>
-
-            {/* Right Column: Content */}
-            <div className="vibe-section-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', paddingRight: '2rem' }}>
-              <h2 className="title-medium" style={{ fontSize: '2.5rem', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.1 }}>
-                Chasing the Golden Era.
-              </h2>
-              <p style={{ fontSize: '1rem', lineHeight: 1.8, color: '#444', fontWeight: 400 }}>
-                Salt and Fade is born from the tropical heat of the Sri Lankan south coast.
-                Our mission is simple: to bring you premium, independent surfwear that feels like a summer's day.
-                Whether you're cruising a surf break or enjoying a bloody gem of a coffee, we have everything you could ever need.
-                Clean. Chill. Original.
-              </p>
-              <Link
-                to="/about"
-                className="btn btn-primary"
-                style={{
-                  width: 'fit-content',
-                  padding: '14px 28px',
-                  backgroundColor: 'var(--color-primary)',
-                  color: 'var(--color-footer)',
-                  borderRadius: '2px',
-                  fontSize: '0.8rem',
-                  letterSpacing: '1.5px'
-                }}
-              >
-                ABOUT US
-              </Link>
-            </div>
-
-          </div>
-        </section>
-      )}
-
-      {/* Collections Section - Only show on home/main shop */}
-      {!collectionId && collections.length > 0 && (
-        <section style={{ padding: '2rem 0 2rem' }}>
-          <div className="container">
-            <div className="section-header-shaggy">
-              <h2>Shop Our Collections</h2>
-              <p>Tailored essentials for every vibe.</p>
-            </div>
-
-            <div className="collection-grid-scroll">
-              {collections.map((c) => (
-                <Link key={c._id} to={`/products?collection=${c._id}&sort=latest`} className="collection-card">
-                  <div className="collection-image-container-wide" style={{ position: 'relative', aspectRatio: '16/9', overflow: 'hidden', borderRadius: 'var(--radius-sm)' }}>
-                    <img src={c.image} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} />
-                    <div className="collection-overlay" style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2rem', color: 'white' }}>
-                      <h3 style={{ fontSize: '1.5rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>{c.name}</h3>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '1px' }}>Discover →</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Customer Reviews Section */}
-      <section style={{ padding: '2rem 0 8rem', backgroundColor: '#fff' }}>
-        <div className="container">
-          <div className="section-header-shaggy">
-            <h2>Community Feedback</h2>
-            <p>What our island family is saying about Salt & Fade.</p>
-          </div>
-        </div>
-
-        <div className="reviews-marquee-container">
-          <div className="reviews-marquee-content">
-            {[
-              {
-                name: 'Dinuka Perera',
-                city: 'Colombo',
-                review: "The quality is unmatched. I've bought premium brands from overseas, but Salt & Fade holds its shape better in our humidity.",
-                rating: 5
-              },
-              {
-                name: 'Amali Wickramasinghe',
-                city: 'Kandy',
-                review: "Finally a brand that keeps it simple and original. The fit of the oversized tees is perfect. Love the finish.",
-                rating: 5
-              },
-              {
-                name: 'Tharindu Silva',
-                city: 'Galle',
-                review: "Salt and Fade in the salt. I wear these to the surf and then to a meeting. Versatile and durable.",
-                rating: 5
-              },
-              {
-                name: 'Kasun Jayasundara',
-                city: 'Negombo',
-                review: "Quick delivery and even better products. The corduroy hats are a bloody gem for beach days.",
-                rating: 5
-              },
-              {
-                name: 'Sandani de Silva',
-                city: 'Matara',
-                review: "International standard streetwear right here in SL. The fabric feels like luxury on the skin.",
-                rating: 5
-              }
-            ].concat([
-              {
-                name: 'Dinuka Perera',
-                city: 'Colombo',
-                review: "The quality is unmatched. I've bought premium brands from overseas, but Salt & Fade holds its shape better in our humidity.",
-                rating: 5
-              },
-              {
-                name: 'Amali Wickramasinghe',
-                city: 'Kandy',
-                review: "Finally a brand that keeps it simple and original. The fit of the oversized tees is perfect. Love the finish.",
-                rating: 5
-              },
-              {
-                name: 'Tharindu Silva',
-                city: 'Galle',
-                review: "Salt and Fade in the salt. I wear these to the surf and then to a meeting. Versatile and durable.",
-                rating: 5
-              },
-              {
-                name: 'Kasun Jayasundara',
-                city: 'Negombo',
-                review: "Quick delivery and even better products. The corduroy hats are a bloody gem for beach days.",
-                rating: 5
-              },
-              {
-                name: 'Sandani de Silva',
-                city: 'Matara',
-                review: "International standard streetwear right here in SL. The fabric feels like luxury on the skin.",
-                rating: 5
-              }
-            ]).map((r, i) => (
-              <div key={i} style={{
-                padding: '2rem 2.5rem',
-                backgroundColor: '#f9f9f9',
-                borderRadius: 'var(--radius-sm)',
-                minWidth: '350px',
-                width: '350px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-                whiteSpace: 'normal',
-                flexShrink: 0
-              }}>
-                <div style={{ color: '#000', display: 'flex', gap: '2px' }}>
-                  {[...Array(r.rating)].map((_, i) => (
-                    <span key={i} style={{ fontSize: '1rem' }}>★</span>
-                  ))}
-                </div>
-                <p style={{
-                  fontStyle: 'italic',
-                  color: '#444',
-                  lineHeight: 1.6,
-                  fontSize: '0.95rem',
-                  flex: 1
-                }}>
-                  "{r.review}"
-                </p>
-                <div>
-                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.15rem' }}>{r.name}</h4>
-                  <span style={{ fontSize: '0.75rem', color: '#888', fontWeight: 600 }}>{r.city}, Sri Lanka</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
-  );
+  const latestProducts = [...products].sort((a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0)).slice(0, 12);
+  const collectionLink = pattern => {
+    const collection = collections.find(item => pattern.test(item.name));
+    return collection ? `/products?collection=${collection._id}&sort=latest` : '/products?sort=latest';
+  };
+  const activities = [
+    { title: 'Surf', image: '/images/campaigns/surf-lifestyle-v4.jpg', alt: 'A Salt & Fade tee worn on a yellow surfboard', to: collectionLink(/surf club|east/i) },
+    { title: 'Courtside', image: '/images/campaigns/tennis-mobile.jpg', alt: 'Ride the East graphics on the tennis court', to: collectionLink(/east/i) },
+    { title: 'Off duty', image: '/images/campaigns/pool-original.jpg', alt: 'Relaxing poolside in a white island graphic tee', to: collectionLink(/island made/i) },
+    { title: 'Everyday', image: '/images/product-references/island-state-of-mind-black-0.webp', alt: 'Island State of Mind graphic tee', to: collectionLink(/state of mind/i) },
+  ];
+  const islandMade = products.filter(product => /island made|island state/i.test(product.name));
+  if (collectionId) return <div className="editorial-store"><section className="sun-products container"><div className="sun-section-heading"><div><span className="eyebrow">SALT & FADE / T-SHIRTS</span><h1>{collections.find(collection => collection._id === collectionId)?.name || 'The collection'}</h1></div><Link className="text-link" to="/products">Shop all <ArrowUpRight size={18} /></Link></div>{status === 'loading' ? <p role="status">Loading tees...</p> : status === 'error' ? <p role="alert">We could not load these tees. Please refresh to try again.</p> : !products.length ? <p>No tees in this collection just yet.</p> : <div className="sun-product-grid">{products.map(product => <ProductCard key={product._id} product={product} />)}</div>}</section></div>;
+  return <div className="sunshine-home editorial-store campaign-home">
+    <CampaignBanner name="surf" desktop="/images/campaigns/surf-desktop-v4.jpg" mobile="/images/campaigns/surf-mobile-editorial-v5.jpg" alt="Salt & Fade graphic tee worn on a yellow surfboard in Sri Lankan waters" eyebrow="SALT & FADE / ISLAND MADE" title={<>A sunshine<br /><em>state of mind.</em></>} description="Original island graphics. Made for days outside." primary cta="Explore the tees" />
+    <ProductCarousel title="Shop the latest styles" products={latestProducts} status={status} />
+    <CampaignBanner name="volleyball" desktop="/images/campaigns/volleyball-desktop.jpg" mobile="/images/campaigns/volleyball-mobile.jpg" alt="Play Outside - Salt & Fade beach volleyball campaign" title="Play outside" cta="Shop the collection" artwork />
+    {!collectionId && collections.length > 0 && <section className="collection-discovery container" aria-labelledby="collection-discovery-title">
+      <div className="collection-discovery-heading"><div><span className="eyebrow">BUILD YOUR ISLAND ROTATION</span><h2 id="collection-discovery-title">Shop by collection</h2></div><div className="collection-discovery-controls"><button type="button" aria-label="Previous collections" aria-controls="collection-rail" disabled={collectionEdges.start} onClick={() => browseCollections(-1)}><ChevronLeft size={18} /></button><button type="button" aria-label="Next collections" aria-controls="collection-rail" disabled={collectionEdges.end} onClick={() => browseCollections(1)}><ChevronRight size={18} /></button></div></div>
+      <nav id="collection-rail" ref={collectionRail} onScroll={updateCollectionEdges} className="collection-discovery-grid" aria-label="Shop by collection">{collections.map(collection => <Link className="collection-discovery-card" key={collection._id} to={`/products?collection=${collection._id}&sort=latest`}>
+        <div className="collection-discovery-image"><img src={collection.image || '/images/salt-fade-bright.svg'} alt="" loading="lazy" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = '/images/salt-fade-bright.svg'; }} /></div>
+        <div className="collection-discovery-caption"><h3>{collection.name}</h3></div>
+      </Link>)}</nav>
+    </section>}
+    <LifestyleRail items={activities} />
+    <CampaignBanner name="pool" desktop="/images/campaigns/pool-desktop.jpg" mobile="/images/campaigns/pool-mobile.jpg" alt="Salt & Fade graphic T-shirt and blue shorts beside a sunlit swimming pool" eyebrow="OFF DUTY / ON ISLAND TIME" title={<>Take the<br />long way off.</>} description="Easy tees. Slow afternoons. Nowhere else to be." cta="Find your everyday tee" />
+    <section className="home-story-tiles" aria-label="Explore Salt & Fade">
+      <Link to={collectionLink(/island made|state of mind/i)}><img src="/images/campaigns/pool-original.jpg" alt="White Salt & Fade tee worn poolside" loading="lazy" /><span>Shop island graphics <ArrowUpRight size={22} /></span></Link>
+      <Link to={collectionLink(/east/i)}><img src="/images/campaigns/tennis-mobile.jpg" alt="Ride the East T-shirt worn courtside" loading="lazy" /><span>Shop Ride the East <ArrowUpRight size={22} /></span></Link>
+      <Link to="/about"><img src="/images/campaigns/surf-lifestyle-v4.jpg" alt="Salt & Fade island wear on the water" loading="lazy" /><span>Our island story <ArrowUpRight size={22} /></span></Link>
+    </section>
+    <ProductCarousel title="The island rotation" eyebrow="ORIGINAL GRAPHICS / EVERYDAY TEES" products={islandMade.length ? islandMade : products.slice(0, 8)} status={status} />
+    <div className="store-service-strip"><span>Delivery across Sri Lanka</span><Link to="/returns">Returns & exchanges <ArrowUpRight size={15} /></Link><a href="https://wa.me/94771070544" target="_blank" rel="noreferrer">Customer support <ArrowUpRight size={15} /></a></div>
+  </div>;
 };
-
 export default HomeScreen;

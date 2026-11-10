@@ -1,0 +1,60 @@
+﻿/* Performance-led retail precision, layered onto the sunny courtside direction. */
+html[data-mood='tennis-club'][data-finish='performance'] { --coast-ivory: #fff; --color-bg: #fff; --coast-ink: #173e32; }
+html[data-mood='tennis-club'][data-finish='performance'] .sun-header { background: #fff; border-bottom-color: #e7e9e6; }
+html[data-mood='tennis-club'][data-finish='performance'] .sun-announcement { background: #1c4537; color: #fff; font-size: 9px; letter-spacing: 1.4px; }
+html[data-mood='tennis-club'][data-finish='performance'] .sun-nav { max-width: 1600px; height: 84px; }
+html[data-mood='tennis-club'][data-finish='performance'] .sun-desktop-nav { font-weight: 700; letter-spacing: 1px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero { height: min(760px, 82svh); min-height: 580px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy { bottom: 80px; max-width: 650px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy h1 { font: 800 clamp(58px, 7vw, 106px)/.95 Arial, Helvetica, sans-serif; letter-spacing: -4px; max-width: 650px; margin-block: 25px; }
+html[data-mood='tennis-club'][data-finish='performance'] .session-hero-copy > .eyebrow { background: transparent; padding: 0; font-size: 10px; letter-spacing: 2.5px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy p { font-size: 15px; max-width: 330px; line-height: 1.75; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-button { background: #e1ed63; border: 1px solid #e1ed63; color: #183e30; font-weight: 700; font-size: 11px; letter-spacing: 1px; min-height: 50px; padding-inline: 28px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-button:hover { background: #f0f7a6; border-color: #f0f7a6; }
+.performance-explore { display: inline-flex; align-items: center; gap: 12px; color: #fff; margin-left: 24px; font-size: 11px; font-weight: 600; padding-block: 12px; }
+.performance-collections { display: flex; overflow-x: auto; gap: 0; max-width: 1600px; margin: 0 auto; padding: 32px 30px; border-bottom: 1px solid #e8ebe6; scrollbar-width: thin; }
+.performance-collections > a { flex: 1 0 185px; display: flex; align-items: center; justify-content: space-between; gap: 17px; padding: 12px 25px; font-size: 10px; letter-spacing: .5px; text-transform: uppercase; font-weight: 700; border-right: 1px solid #e4e7e1; }
+.performance-collections > a:first-child { padding-left: 0; }
+.performance-collections > a:last-child { border-right: 0; }
+.performance-collections > a > span { font-size: 9px; color: #7f8c81; font-weight: 400; }
+.performance-collections > a > svg { flex-shrink: 0; }
+.performance-collections > a:hover { color: #a54a2e; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-products { max-width: 1560px; padding-top: 90px; padding-bottom: 100px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-products > .sun-section-heading { justify-content: space-between; text-align: left; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-products .eyebrow { justify-content: flex-start; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-section-heading h2 { font: 700 clamp(30px, 3vw, 43px)/1.08 Arial, Helvetica, sans-serif; letter-spacing: -1.3px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .product-tabs { justify-content: flex-start; margin-top: 28px; margin-bottom: 35px; gap: 25px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .product-tabs button { border: 0; border-bottom: 2px solid transparent; padding: 10px 0; font-weight: 600; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .product-tabs button[aria-pressed='true'] { background: transparent; color: #183f32; border-bottom-color: #183f32; }
+html[data-mood='tennis-club'][data-finish='performance'] .merchandise-grid { gap: 38px 24px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-product-info h3 { font-size: 13px; font-weight: 600; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-product-info > span { font-size: 12px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .product-view { background: #183f32f2; color: #fff; font-size: 11px; font-weight: 600; }
+html[data-mood='tennis-club'][data-finish='performance'] .in-grid-campaign h3 { font: 700 clamp(36px, 4vw, 58px)/1 Arial, sans-serif; text-transform: uppercase; letter-spacing: -1.6px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .shop-session { max-width: 1480px; }
+html[data-mood='tennis-club'][data-finish='performance'] .brand-interlude { background: #f0f2e9; }
+html[data-mood='tennis-club'][data-finish='performance'] .brand-interlude h2 { font-weight: 700; letter-spacing: -1.5px; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-collection-grid a { position: relative; }
+html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-collection-grid span { font-weight: 700; padding-top: 22px; }
+html[data-mood='tennis-club'][data-finish='performance'] .coast-notes-grid h3 { font-weight: 600; }
+html[data-mood='tennis-club'][data-finish='performance'] .pool-escape-copy h2 { font: 700 clamp(44px, 5vw, 70px)/1 Arial, sans-serif; letter-spacing: -2.5px; }
+html[data-mood='tennis-club'][data-finish='performance'] .sun-footer { background: #12392e; }
+@media (max-width: 900px) {
+  .performance-collections { padding: 22px 25px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .sun-nav { height: 76px; }
+}
+@media (max-width: 560px) {
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero { height: 76svh; min-height: 570px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy { bottom: 85px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy h1 { font-size: 58px; letter-spacing: -2.4px; max-width: 330px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy p { font-size: 13px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .session-hero-copy .sun-button { padding-inline: 18px; }
+  .performance-explore { margin-left: 15px; font-size: 10px; gap: 5px; }
+  .performance-collections { padding: 22px 20px; }
+  .performance-collections > a { flex-basis: 190px; padding-inline: 20px; font-size: 9px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-products { padding-top: 55px; padding-bottom: 65px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-section-heading h2 { font-size: 29px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .merchandise-grid { gap: 30px 14px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .editorial-store .sun-product-info h3 { font-size: 12px; }
+  html[data-mood='tennis-club'][data-finish='performance'] .pool-escape-copy h2 { font-size: 46px; letter-spacing: -1.5px; }
+}

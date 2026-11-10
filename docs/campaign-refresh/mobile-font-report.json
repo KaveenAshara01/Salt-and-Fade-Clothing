@@ -1,0 +1,41 @@
+{
+  "desktop": {
+    "width": 1440,
+    "overflow": false,
+    "font": "Fraunces, Georgia, serif",
+    "fontLoaded": true,
+    "source": "http://127.0.0.1:5173/images/campaigns/surf-desktop-v4.jpg",
+    "imageLoaded": true,
+    "imageAspect": 2.4029666254635353,
+    "renderedAspect": 2.398989898989899,
+    "objectFit": "cover",
+    "copyBottom": 407.6875,
+    "bannerHeight": 594
+  },
+  "mobile": {
+    "width": 390,
+    "overflow": false,
+    "font": "Fraunces, Georgia, serif",
+    "fontLoaded": true,
+    "source": "http://127.0.0.1:5173/images/campaigns/surf-mobile-editorial-v5.jpg",
+    "imageLoaded": true,
+    "imageAspect": 0.6432225063938619,
+    "renderedAspect": 0.6435643564356436,
+    "objectFit": "contain",
+    "copyBottom": 228.90625,
+    "bannerHeight": 606
+  },
+  "narrow-mobile": {
+    "width": 320,
+    "overflow": false,
+    "font": "Fraunces, Georgia, serif",
+    "fontLoaded": true,
+    "source": "http://127.0.0.1:5173/images/campaigns/surf-mobile-editorial-v5.jpg",
+    "imageLoaded": true,
+    "imageAspect": 0.6432225063938619,
+    "renderedAspect": 0.6438631790744467,
+    "objectFit": "contain",
+    "copyBottom": 223.6875,
+    "bannerHeight": 497
+  }
+}

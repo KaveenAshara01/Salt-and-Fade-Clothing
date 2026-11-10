@@ -1,0 +1,7 @@
+    {!collectionId && collections.length > 0 && <section className="collection-discovery container" aria-labelledby="collection-discovery-title">
+      <div className="collection-discovery-heading"><div><span className="eyebrow">BUILD YOUR ISLAND ROTATION</span><h2 id="collection-discovery-title">Shop by collection</h2></div><div className="collection-discovery-controls"><button type="button" aria-label="Previous collections" aria-controls="collection-rail" disabled={collectionEdges.start} onClick={() => browseCollections(-1)}><ChevronLeft size={18} /></button><button type="button" aria-label="Next collections" aria-controls="collection-rail" disabled={collectionEdges.end} onClick={() => browseCollections(1)}><ChevronRight size={18} /></button></div></div>
+      <nav id="collection-rail" ref={collectionRail} onScroll={updateCollectionEdges} className="collection-discovery-grid" aria-label="Shop by collection">{collections.map(collection => <Link className="collection-discovery-card" key={collection._id} to={`/products?collection=${collection._id}&sort=latest`}>
+        <div className="collection-discovery-image"><img src={collection.image || '/images/salt-fade-bright.svg'} alt="" loading="lazy" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = '/images/salt-fade-bright.svg'; }} /></div>
+        <div className="collection-discovery-caption"><h3>{collection.name}</h3></div>
+      </Link>)}</nav>
+    </section>}

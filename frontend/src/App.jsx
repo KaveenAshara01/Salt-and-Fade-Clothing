@@ -29,7 +29,7 @@ const App = () => {
       <ScrollToTop />
       <Header />
       <CartModal />
-      <main style={{ minHeight: '80vh' }}>
+      <main className="storefront-content" style={{ minHeight: '80vh' }}>
         <Outlet />
       </main>
       <Footer />

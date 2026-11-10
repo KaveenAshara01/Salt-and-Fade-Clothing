@@ -308,7 +308,7 @@ const CheckoutScreen = () => {
   };
 
   return (
-    <div className="container" style={{ padding: 'max(90px, 120px) var(--container-padding) 60px', minHeight: '80vh' }}>
+    <div className="container" style={{ padding: '48px var(--container-padding) 60px', minHeight: '80vh' }}>
       <Link to="/cart" className="flex-center" style={{ gap: '0.5rem', width: 'fit-content', marginBottom: '2rem', color: 'var(--color-text)', opacity: 0.7 }}>
         <ArrowLeft size={18} /> Back to Cart
       </Link>
@@ -330,10 +330,10 @@ const CheckoutScreen = () => {
             </div>
 
             {!userInfo && (
-               <div style={{ backgroundColor: '#f0f4f2', padding: '1.25rem', borderRadius: 'var(--radius-sm)', marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center', color: 'var(--color-primary)', border: '1px solid #e0e8e4' }}>
+               <div style={{ backgroundColor: '#f5f5f5', padding: '1.25rem', borderRadius: 'var(--radius-sm)', marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}>
                   <Info size={20} />
                   <p style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>
-                    <strong>Quick Tip:</strong> Log in to your account <button type="button" onClick={() => setIsLoginModalOpen(true)} style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline', padding: 0 }}>here</button> to track your order status in real-time.
+                    <strong>Quick Tip:</strong> Log in to your account <button type="button" onClick={() => setIsLoginModalOpen(true)} style={{ background: 'none', border: 'none', color: 'var(--color-text)', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline', padding: 0 }}>here</button> to track your order status in real-time.
                   </p>
                </div>
             )}
